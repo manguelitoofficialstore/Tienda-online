@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOS Store</title>
+
+<style>
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+/* FILTROS */
+.filtros {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #00ff88;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #00cc6a;
+}
+
+/* GRID */
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: #1c1c1c;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(0,255,136,0.2);
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* IMAGEN */
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+/* INFO */
+.info {
+  padding: 15px;
+}
+
+.precio {
+  color: #00ff88;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* BOTON WHATSAPP */
+.whatsapp {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  padding: 10px;
+  background: #25D366;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>MOS Manguelito Official Store</h1>
+
+<div class="filtros" id="filtros"></div>
+
+<div class="catalogo" id="catalogo"></div>
+
+<script>
+
+const URL = "https://script.google.com/macros/s/AKfycbyiZtM8p8Sy8KqabM7wWbb2xb-iT8BlFjF32EWQVC1kELrVTjgHppaWf5tJEchvwhdN/exec";
+
+let productos = [];
+
+fetch(URL)
+.then(res => res.json())
+.then(data => {
+  productos = data;
+  mostrarProductos(data);
+  crearFiltros(data);
+});
+
+function mostrarProductos(lista){
+  const cont = document.getElementById("catalogo");
+  cont.innerHTML = "";
+
+  lista.forEach(p => {
+
+    const mensaje = encodeURIComponent(
+      "Hola, quiero este producto: " + p.nombre
+    );
+
+    cont.innerHTML += `
+    <div class="card">
+      <img src="${p.imagen}">
+      <div class="info">
+        <h3>${p.nombre}</h3>
+        <p>${p.categoria}</p>
+        <a class="whatsapp" href="https://wa.me/573105218993?text=${mensaje}" target="_blank">
+          Comprar por WhatsApp
+        </a>
+      </div>
+    </div>
+    `;
+  });
+}
+
+function crearFiltros(data){
+  const categorias = [...new Set(data.map(p => p.categoria))];
+  const cont = document.getElementById("filtros");
+
+  cont.innerHTML = `<button onclick="mostrarProductos(productos)">Todos</button>`;
+
+  categorias.forEach(cat => {
+    cont.innerHTML += `
+      <button onclick="filtrar('${cat}')">${cat}</button>
+    `;
+  });
+}
+
+function filtrar(cat){
+  const filtrados = productos.filter(p => p.categoria === cat);
+  mostrarProductos(filtrados);
+}
+
+</script>
+
+</body>
+</html>
