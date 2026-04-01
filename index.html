@@ -20,16 +20,8 @@ header {
   font-weight: bold;
 }
 
-h2 {
-  text-align: center;
-  margin-top: 30px;
-}
-
 .container {
   padding: 20px;
-}
-
-.productos {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -38,9 +30,9 @@ h2 {
 
 .producto {
   background: #f5f5f5;
-  padding: 15px;
+  padding: 10px;
   border-radius: 10px;
-  width: 180px;
+  width: 160px;
   text-align: center;
   transition: 0.3s;
 }
@@ -51,25 +43,21 @@ h2 {
 }
 
 .producto img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
+  width: 140px;
+  height: 140px;
+  object-fit: contain; /* 👈 NO RECORTA */
+  background: white;
 }
 
 button {
-  margin-top: 10px;
+  margin-top: 8px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
   color: black;
   border: none;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   border-radius: 8px;
   font-weight: bold;
-}
-
-button:hover {
-  transform: scale(1.05);
 }
 </style>
 </head>
@@ -78,74 +66,56 @@ button:hover {
 
 <header>MOS Manguelito Official Store 🛒</header>
 
-<div class="container">
+<div class="container" id="catalogo"></div>
 
-<h2>Camisetas</h2>
-<div class="productos">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-C.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-CO-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-CO-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DH-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DH-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DR-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DR-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DV-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DV-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-DV-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-HE-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-HE-XX-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-HE-XX-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-HE-XX-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-LI-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-LI-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-LI-N.png">
-</div>
+<script>
+const usuario = "manguelitoofficialstore";
+const repo = "Tienda-online";
+const rama = "main";
 
-<h2>Billeteras</h2>
-<div class="productos">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-CC1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-G1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-FR-CC1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-FR-CO1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-HE-CC.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-HE-CC1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-HE-CC2.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-HE-G1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-LE-CC1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-MO-C1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-MO-G1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-TA-C1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-TA-C2.png">
-</div>
+const carpetas = ["Camisetas","Billeteras","Llaveros","Pulseras","Relojes"];
 
-<h2>Llaveros</h2>
-<div class="productos">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-C1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-M1.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-M2.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-M3.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-P1.png">
-</div>
+const contenedor = document.getElementById("catalogo");
 
-<h2>Pulseras</h2>
-<div class="productos">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-D.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-SB-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-SN-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-SN-N.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-TA-A.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-TG-R.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-TN-B.png">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-TN-N.png">
-</div>
+async function cargarImagenes() {
+  for (let carpeta of carpetas) {
+    try {
+      const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}`;
+      const res = await fetch(url);
+      const data = await res.json();
 
-</div>
+      data.forEach(file => {
+        if (file.type === "file") {
+          const nombre = file.name;
+
+          const div = document.createElement("div");
+          div.className = "producto";
+
+          div.innerHTML = `
+            <img src="${file.download_url}">
+            <p>${nombre}</p>
+            <button onclick="comprar('${nombre}')">Comprar</button>
+          `;
+
+          contenedor.appendChild(div);
+        }
+      });
+
+    } catch (error) {
+      console.log("Error en carpeta:", carpeta);
+    }
+  }
+}
+
+function comprar(producto) {
+  const numero = "573001234567"; // 👈 CAMBIA ESTO
+  const mensaje = "Hola, quiero comprar: " + producto;
+  const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
+  window.open(url, "_blank");
+}
+
+cargarImagenes();
+</script>
 
 </body>
 </html>
