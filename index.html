@@ -54,7 +54,6 @@ header {
   transform: scale(2);
 }
 
-/* 🔥 BOTONES BONITOS */
 button {
   margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
@@ -105,7 +104,7 @@ input, select {
 
 <div id="modalCompra" class="modal">
   <div class="modal-content">
-    <span onclick="cerrarModal()" style="cursor:pointer;">✖</span>
+    <span id="cerrarModal" style="cursor:pointer;">✖</span>
     <div id="formCompra"></div>
   </div>
 </div>
@@ -130,54 +129,50 @@ async function cargarProductos() {
     div.innerHTML = `<h2>${cat}</h2><div class="grid"></div>`;
     const grid = div.querySelector(".grid");
 
-    data
-      .map((prod, index) => ({ prod, index }))
-      .filter(obj => obj.prod["Categoría"] === cat)
-      .forEach(obj => {
+    data.forEach((prod, index) => {
+      if (prod["Categoría"] !== cat) return;
 
-        const prod = obj.prod;
-        const index = obj.index;
+      let categoriaReal = prod["Categoría"];
+      if (categoriaReal === "Monederos" || categoriaReal === "Tarjeteros") {
+        categoriaReal = "Billeteras";
+      }
 
-        let categoriaReal = prod["Categoría"];
-        if (categoriaReal === "Monederos" || categoriaReal === "Tarjeteros") {
-          categoriaReal = "Billeteras";
-        }
+      let referencia = prod["Referencia"];
+      if (!referencia.includes(".")) referencia += ".png";
 
-        let referencia = prod["Referencia"];
-        if (!referencia.includes(".")) referencia += ".png";
+      const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${categoriaReal}/${referencia}`;
 
-        const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${categoriaReal}/${referencia}`;
+      const el = document.createElement("div");
+      el.className = "producto";
 
-        const el = document.createElement("div");
-        el.className = "producto";
+      const btnComprar = document.createElement("button");
+      btnComprar.textContent = "Comprar";
 
-        el.innerHTML = `
-          <img src="${imgURL}">
-          <p><b>${prod["Nombre"]}</b></p>
-          <p>$${prod["Precio"]}</p>
+      const btnPreguntar = document.createElement("button");
+      btnPreguntar.textContent = "Preguntar";
 
-          <button class="btn-comprar">Comprar</button>
+      btnComprar.addEventListener("click", () => abrirCompra(index));
+      btnPreguntar.addEventListener("click", () => preguntar(prod));
 
-          <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
-            Preguntar
-          </button>
-        `;
+      el.innerHTML = `
+        <img src="${imgURL}">
+        <p><b>${prod["Nombre"]}</b></p>
+        <p>$${prod["Precio"]}</p>
+      `;
 
-        // 🔥 EVENTO REAL (SOLUCIÓN)
-        el.querySelector(".btn-comprar").addEventListener("click", () => {
-          abrirCompra(index);
-        });
+      el.appendChild(btnComprar);
+      el.appendChild(btnPreguntar);
 
-        grid.appendChild(el);
-      });
+      grid.appendChild(el);
+    });
 
     contenedor.appendChild(div);
   });
 }
 
 /* WHATSAPP */
-function preguntar(ref, nombre, precio) {
-  const msg = `Me interesa\nReferencia: ${ref}\nProducto: ${nombre}\nPrecio: $${precio}`;
+function preguntar(prod) {
+  const msg = `Me interesa\nReferencia: ${prod["Referencia"]}\nProducto: ${prod["Nombre"]}\nPrecio: $${prod["Precio"]}`;
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
 }
 
@@ -187,104 +182,79 @@ function abrirCompra(index) {
 
   document.getElementById("modalCompra").style.display = "block";
 
-  document.getElementById("formCompra").innerHTML = `
-    <h3>${prod["Nombre"]}</h3>
+  const form = document.getElementById("formCompra");
+  form.innerHTML = "";
 
-    <input id="nombre" placeholder="Nombre completo">
-    <input id="whatsapp" placeholder="WhatsApp">
+  const titulo = document.createElement("h3");
+  titulo.textContent = prod["Nombre"];
 
-    <label>Cantidad</label>
-    <input id="cantidad" type="number" value="1" min="1"
-      onchange="actualizarTotal(${prod["Precio"]}, '${prod["Talla"]}')">
+  const nombre = document.createElement("input");
+  nombre.placeholder = "Nombre completo";
 
-    <p id="total">Total: $${prod["Precio"]}</p>
+  const whatsapp = document.createElement("input");
+  whatsapp.placeholder = "WhatsApp";
 
-    <div id="tallasContainer"></div>
+  const cantidad = document.createElement("input");
+  cantidad.type = "number";
+  cantidad.value = 1;
+  cantidad.min = 1;
 
-    <select id="tipoDireccion" onchange="cambiarDireccion()">
-      <option value="">Tipo dirección</option>
-      <option value="urbana">Urbana</option>
-      <option value="rural">Rural</option>
-    </select>
+  const total = document.createElement("p");
+  total.textContent = "Total: $" + prod["Precio"];
 
-    <div id="direccionExtra"></div>
+  cantidad.addEventListener("input", () => {
+    total.textContent = "Total: $" + (cantidad.value * prod["Precio"]);
+  });
 
-    <label>
-      <input type="checkbox" id="datos"> Acepto tratamiento de datos
-    </label>
+  const direccion = document.createElement("input");
+  direccion.placeholder = "Dirección";
 
-    <button onclick="enviarPedido(${index})">Enviar pedido</button>
-  `;
+  const check = document.createElement("input");
+  check.type = "checkbox";
 
-  actualizarTotal(prod["Precio"], prod["Talla"]);
+  const enviar = document.createElement("button");
+  enviar.textContent = "Enviar pedido";
+
+  enviar.addEventListener("click", () => {
+    if (!check.checked) {
+      alert("Debes aceptar los datos");
+      return;
+    }
+
+    const msg = `
+🧾 Pedido
+
+${new Date().toLocaleString()}
+
+${nombre.value}
+${whatsapp.value}
+
+${prod["Nombre"]}
+${prod["Referencia"]}
+
+Cantidad: ${cantidad.value}
+Total: $${cantidad.value * prod["Precio"]}
+
+${direccion.value}
+    `;
+
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
+  });
+
+  form.appendChild(titulo);
+  form.appendChild(nombre);
+  form.appendChild(whatsapp);
+  form.appendChild(cantidad);
+  form.appendChild(total);
+  form.appendChild(direccion);
+  form.appendChild(check);
+  form.append(" Acepto datos");
+  form.appendChild(enviar);
 }
 
-/* TOTAL */
-function actualizarTotal(precio, usaTalla) {
-  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
-  document.getElementById("total").innerText = "Total: $" + (precio * cantidad);
-
-  if (usaTalla === "Sí") {
-    let html = "";
-    ["XS","S","M","L","XL","XXL"].forEach(t => {
-      html += `${t}: <input type="number" id="talla_${t}" min="0" value="0"><br>`;
-    });
-    document.getElementById("tallasContainer").innerHTML = html;
-  }
-}
-
-/* DIRECCIÓN */
-function cambiarDireccion() {
-  const tipo = document.getElementById("tipoDireccion").value;
-  const div = document.getElementById("direccionExtra");
-
-  if (tipo === "urbana") {
-    div.innerHTML = `<input id="direccion" placeholder="Dirección completa">`;
-  } else {
-    div.innerHTML = `<input id="direccion" placeholder="Municipio / Vereda / Referencia">`;
-  }
-}
-
-/* PEDIDO */
-function enviarPedido(index) {
-  const prod = productosGlobal[index];
-
-  if (!document.getElementById("datos").checked) {
-    alert("Debes aceptar los datos");
-    return;
-  }
-
-  const nombre = document.getElementById("nombre").value;
-  const whatsapp = document.getElementById("whatsapp").value;
-  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
-  const total = cantidad * prod["Precio"];
-  const fecha = new Date().toLocaleString();
-  const orden = Date.now();
-  const direccion = document.getElementById("direccion")?.value || "";
-
-  const msg = `
-🧾 Orden #${orden}
-
-📅 ${fecha}
-
-👤 ${nombre}
-📱 ${whatsapp}
-
-📦 ${prod["Nombre"]}
-🔖 ${prod["Referencia"]}
-
-Cantidad: ${cantidad}
-💰 Total: $${total}
-
-📍 ${direccion}
-  `;
-
-  window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
-}
-
-function cerrarModal() {
+document.getElementById("cerrarModal").addEventListener("click", () => {
   document.getElementById("modalCompra").style.display = "none";
-}
+});
 
 cargarProductos();
 </script>
