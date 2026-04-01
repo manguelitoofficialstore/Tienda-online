@@ -15,62 +15,43 @@
         
         .container { padding: 20px; max-width: 1200px; margin: 20px auto; background: rgba(255,255,255,0.85); border-radius: 15px; }
         
-        /* Títulos de Categorías */
         .categoria-titulo {
-            width: 100%;
-            border-bottom: 3px solid #FFD54F;
-            margin: 40px 0 20px 0;
-            padding-bottom: 10px;
-            color: #333;
-            text-transform: uppercase;
-            font-weight: 700;
+            width: 100%; border-bottom: 3px solid #FFD54F;
+            margin: 40px 0 20px 0; padding-bottom: 10px;
+            color: #333; text-transform: uppercase; font-weight: 700;
         }
 
-        /* Cuadrícula de productos (Uno al lado del otro) */
+        /* LAYOUT CORREGIDO: Cuadrícula responsiva */
         .grid { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 25px; 
-            justify-content: center; 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
             padding-bottom: 50px;
         }
 
-        /* Tarjeta de Producto */
         .producto { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 12px; 
-            width: 180px; /* Ancho fijo para mantener la simetría */
-            text-align: center; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; 
-            overflow: visible; 
+            background: white; padding: 15px; border-radius: 12px; 
+            text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative; overflow: visible; 
         }
 
         /* ZOOM AL DOBLE */
         .producto img { 
-            width: 100%; 
-            height: 140px; 
-            object-fit: contain; 
+            width: 100%; height: 140px; object-fit: contain; 
             transition: transform 0.3s ease-in-out; 
-            cursor: pointer; 
-            position: relative; 
-            z-index: 10;
+            cursor: pointer; position: relative; z-index: 10;
         }
         .producto:hover img { 
             transform: scale(2) !important; 
             z-index: 999 !important; 
         }
 
-        /* BOTONES AMARILLOS */
         .btn-mos {
             margin-top: 8px; border: none; padding: 10px; cursor: pointer; 
             width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s;
             background: #FFD54F; color: #000; display: block;
         }
-        .btn-mos:hover {
-            background: #000 !important; color: #FFD54F !important;
-        }
+        .btn-mos:hover { background: #000 !important; color: #FFD54F !important; }
 
         /* MODAL */
         .modal { 
@@ -99,7 +80,7 @@
 </header>
 
 <div class="container" id="catalogo">
-    <h3 style="text-align:center;">Cargando catálogo oficial...</h3>
+    <h3 style="text-align:center;">Cargando catálogo...</h3>
 </div>
 
 <div id="modalCompra" class="modal">
@@ -110,7 +91,7 @@
         <input type="text" id="mNombre" placeholder="Tu nombre completo">
         <input type="text" id="mDireccion" placeholder="Dirección y Ciudad">
         
-        <label>Cantidad de unidades:</label>
+        <label>Cantidad:</label>
         <input type="number" id="mCant" value="1" min="1">
         
         <div id="contenedorTallas"></div>
@@ -131,18 +112,14 @@ async function cargar() {
         const contPrincipal = document.getElementById("catalogo");
         contPrincipal.innerHTML = "";
 
-        // 1. Obtener categorías únicas
         const categorias = [...new Set(data.map(p => p["Categoría"]))];
 
-        // 2. Crear secciones por categoría
         categorias.forEach(cat => {
             const seccion = document.createElement("div");
             seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
-            
             const grid = document.createElement("div");
             grid.className = "grid";
 
-            // 3. Filtrar y mostrar productos de esta categoría
             data.filter(p => p["Categoría"] === cat).forEach(p => {
                 let carpeta = p["Categoría"];
                 if (carpeta === "Monederos" || carpeta === "Tarjeteros") carpeta = "Billeteras";
@@ -162,24 +139,24 @@ async function cargar() {
                 `;
                 grid.appendChild(card);
             });
-
             seccion.appendChild(grid);
             contPrincipal.appendChild(seccion);
         });
-
-    } catch (e) {
-        document.getElementById("catalogo").innerHTML = "Error al cargar la tienda. Por favor refresca la página.";
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
 }
 
-// Lógica del Modal
 function abrirModal(p) {
     productoActual = p;
     document.getElementById("mTitulo").innerText = p.Nombre;
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
-    generarTallas(1);
+    
+    // Solo generar tallas si la columna "Talla" es "Sí"
+    if (p.Talla === "Sí") {
+        generarTallas(1);
+    } else {
+        document.getElementById("contenedorTallas").innerHTML = "";
+    }
     actualizarPrecio(1);
 }
 
@@ -210,7 +187,10 @@ function actualizarPrecio(c) {
 document.getElementById("mCant").oninput = (e) => {
     let c = parseInt(e.target.value);
     if(isNaN(c) || c < 1) c = 1;
-    generarTallas(c);
+    // Solo actualizar tallas si el producto las requiere
+    if (productoActual.Talla === "Sí") {
+        generarTallas(c);
+    }
     actualizarPrecio(c);
 };
 
@@ -218,21 +198,25 @@ function enviarPedido() {
     const nom = document.getElementById("mNombre").value;
     const dir = document.getElementById("mDireccion").value;
     const cant = document.getElementById("mCant").value;
-    const selects = document.querySelectorAll(".sel-talla-final");
     
-    let tallas = [];
-    selects.forEach((s, i) => tallas.push(`Unid ${i+1}: ${s.value}`));
+    let mensajeTallas = "";
+    if (productoActual.Talla === "Sí") {
+        const selects = document.querySelectorAll(".sel-talla-final");
+        let lista = [];
+        selects.forEach((s, i) => lista.push(`Unid ${i+1}: ${s.value}`));
+        mensajeTallas = `*Tallas:* \n- ${lista.join('\n- ')}\n\n`;
+    }
 
     if(!nom || !dir) {
-        alert("¡Falta tu nombre o dirección!");
+        alert("Faltan datos de envío.");
         return;
     }
 
     const texto = `🧾 *ORDEN DE PEDIDO - MANGUELITO*\n\n` +
                   `*Producto:* ${productoActual.Nombre}\n` +
-                  `*Referencia:* ${productoActual.Referencia}\n` +
+                  `*Ref:* ${productoActual.Referencia}\n` +
                   `*Cantidad:* ${cant}\n` +
-                  `*Tallas:* \n- ${tallas.join('\n- ')}\n\n` +
+                  mensajeTallas +
                   `*Total:* $${cant * productoActual.Precio}\n\n` +
                   `*Cliente:* ${nom}\n` +
                   `*Dirección:* ${dir}`;
