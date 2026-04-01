@@ -1,0 +1,541 @@
+[
+  {
+    "Referencia": "CA-BO-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta blanca cuello Henley botones",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-BO-C.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta caquie cuello Henley botones",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-BO-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta negra cuello Henley botones",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-CO-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello Henley blanca de corredera",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-CO-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello Henley negra de corredera",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DH-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello Henley blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DH-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello Henley negra",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DR-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello redondo blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DR-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello redondo negraca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DV-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello en V blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-DV-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva cuello en V negra",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-HE-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello alto tipo Henly Modelo 1 blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-HE-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello alto tipo Henly Modelo 1 negra",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-HE-XX-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello alto tipo Henly Modelo 2 blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-HE-XX-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta cuello alto tipo Henly Modelo 2 blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-LI-B.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva licrada manga larga blanca",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "CA-LI-N.png",
+    "Categoría": "Camisetas",
+    "Nombre": "Camiseta deportiva licrada manga larga negra",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "AC-PU-ME-B.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera metálica plateada",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "AC-PU-ME-D.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera metálica dorada",
+    "Precio": 100000,
+    "Talla": "Sí"
+  },
+  {
+    "Referencia": "AC-PU-ME-N.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera metálica negra",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-SB-B.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera de silicona correa blanca hebilla plateada",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-SN-HB.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera de silicona correa negra hebilla plateada",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-SN-HN.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera de silicona correa negra hebilla negra",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-TG-R.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera textil correa gris hebilla rosa",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-TN-B.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera textil correa negra hebilla plateada",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-PU-TN-N.png",
+    "Categoría": "Pulseras",
+    "Nombre": "Pulsera textil correa negra hebilla negra",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-EA-N.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula negra escudo a color",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-EA.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula amarilla escudo a color",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-EB-N.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula negra escudo blanco",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-EB.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula amarilla escudo negro",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-LA.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula amarilla logo negro",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-LB.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula blanca logo gris",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-TU-LN.png",
+    "Categoría": "Tulas",
+    "Nombre": "Tula negra logo dorado",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-CO-CC.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera de zipper café claro con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-CO-G.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera de zipper gris con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-FR-CC1.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera FR café claro grabado de puente colgante",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-FR-CO1.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera FR café oscuro grabado de puente colgante",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-HE-CC.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera café claro con grabado de puente colgante y escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-HE-CC1.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera café claro con grabado de puente colgante",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-HE-CC2.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera café claro con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-HE-G1.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera gris con grabado de puente colgante y escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-BI-LE-CC1.png",
+    "Categoría": "Billeteras",
+    "Nombre": "Billetera café claro con escudo y M de Manguelito",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-MO-C1.png",
+    "Categoría": "Monederos",
+    "Nombre": "Monedereo café claro con grabado de escudo e himno",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-MO-G1.png",
+    "Categoría": "Monederos",
+    "Nombre": "Monedereo gris con grabado de escudo e himno",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-TA-C1.png",
+    "Categoría": "Tarjeteros",
+    "Nombre": "Tarjetero café oscuro con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-TA-C2.png",
+    "Categoría": "Tarjeteros",
+    "Nombre": "Tarjetero café oscuro con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-C1.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero negro de cuero y medalla con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-M1-B.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero metálico tipo TAG con bandera",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-M1-L.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero metálico tipo TAG negro con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-M2.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero metálico con bandera Modelo 1",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-M3.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero metálico plateado con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-LL-P1.png",
+    "Categoría": "Llaveros",
+    "Nombre": "Llavero metálico con bandera Modelo 2",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-CC-AC.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj clásico correa de cuero café caja plateada dial café",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-CC-ND.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj clásico correa de cuero sintético café caja negra dial dorado",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-CC-RR.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj clásico correa de cuero sintético café caja rosa dial rosa",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-CN-AA.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj clásico correa de cuero sintético negro caja plateada dial plateado",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-CN-NN.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj clásico correa de cuero negro caja negra dial negro",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-TAZ.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj sofisticado correa textil azul dial amarillo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-TCA.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj sofisticado correa textil café dial amarillo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "AC-RE-TN.png",
+    "Categoría": "Relojes",
+    "Nombre": "Reloj sofisticado correa textil café negra amarillo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PE-A.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva amarilla con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PE-B.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva blanca con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PE-N.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva negra con escudo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PL-A.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva amarilla con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PL-B.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva blanca con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-PL-N.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra deportiva negra con logo",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SB-A.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica amarilla con bandera",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SB-B.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica blanca con bandera",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SB-N.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica negra con bandera",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SL-A.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica amarilla con logo negro",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SL-B.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica blanca con logo negro",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-GO-SL-N.png",
+    "Categoría": "Gorras",
+    "Nombre": "Gorra clásica negra con logo dorado",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-BA-XL",
+    "Categoría": "Banderas",
+    "Nombre": "Bandera de Manguelito tamaño XL (150cmx100cm)",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-BA-L",
+    "Categoría": "Banderas",
+    "Nombre": "Bandera de Manguelito tamaño M (100cm66cm)",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-BA-M",
+    "Categoría": "Banderas",
+    "Nombre": "Bandera de Manguelito tamaño L (75cmx50cm)",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-BA-S",
+    "Categoría": "Banderas",
+    "Nombre": "Bandera de Manguelito tamaño L (45cmx30cm)",
+    "Precio": 100000,
+    "Talla": "No"
+  },
+  {
+    "Referencia": "IT-BA-XS",
+    "Categoría": "Banderas",
+    "Nombre": "Bandera de Manguelito tamaño L (30cmx20cm)",
+    "Precio": 100000,
+    "Talla": "No"
+  }
+]
