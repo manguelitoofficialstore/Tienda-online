@@ -14,7 +14,6 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  color: #111;
 }
 
 header {
@@ -33,13 +32,28 @@ header {
   border-radius: 15px;
 }
 
-/* TITULOS DE CATEGORIA */
-h2 {
-  width: 100%;
-  margin: 20px 0 5px 10px;
+/* BOTONES DE FILTRO */
+.filtros {
+  text-align: center;
+  margin: 10px;
 }
 
-/* TARJETAS */
+.filtros button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+.filtros button:hover {
+  background: #FFD54F;
+  color: black;
+}
+
+/* PRODUCTOS */
 .producto {
   background: #fafafa;
   padding: 10px;
@@ -59,7 +73,6 @@ h2 {
   transform: scale(2);
 }
 
-/* BOTONES */
 button {
   margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
@@ -108,6 +121,7 @@ button {
   <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/LOGO_MOS.png" style="width:200px;">
 </header>
 
+<div class="filtros" id="filtros"></div>
 <div class="container" id="catalogo"></div>
 
 <!-- MODAL -->
@@ -124,7 +138,6 @@ button {
 const usuario = "manguelitoofficialstore";
 const repo = "Tienda-online";
 
-/* 🔥 TODAS LAS CATEGORÍAS */
 const carpetas = [
   "Gorras",
   "Camisetas",
@@ -136,15 +149,33 @@ const carpetas = [
 ];
 
 const contenedor = document.getElementById("catalogo");
+const filtrosDiv = document.getElementById("filtros");
 
+let productos = [];
+
+/* CREAR BOTONES */
+function crearFiltros() {
+  filtrosDiv.innerHTML = '<button onclick="filtrar(\'Todos\')">Todos</button>';
+
+  carpetas.forEach(cat => {
+    filtrosDiv.innerHTML += `<button onclick="filtrar('${cat}')">${cat}</button>`;
+  });
+}
+
+/* FILTRAR */
+function filtrar(categoria) {
+  contenedor.innerHTML = "";
+
+  productos
+    .filter(p => categoria === "Todos" || p.categoria === categoria)
+    .forEach(p => {
+      contenedor.appendChild(p.elemento);
+    });
+}
+
+/* CARGAR PRODUCTOS */
 async function cargarImagenes() {
   for (let carpeta of carpetas) {
-
-    // 👉 TITULO DE CATEGORIA
-    const titulo = document.createElement("h2");
-    titulo.innerText = carpeta;
-    contenedor.appendChild(titulo);
-
     try {
       const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}?t=${new Date().getTime()}`;
       const res = await fetch(url);
@@ -163,19 +194,22 @@ async function cargarImagenes() {
             <button onclick="verDetalles('${file.name}','${file.download_url}')">Detalles</button>
           `;
 
+          productos.push({
+            categoria: carpeta,
+            elemento: div
+          });
+
           contenedor.appendChild(div);
         }
       });
 
-    } catch (error) {
-      console.log("Error en:", carpeta);
-    }
+    } catch (error) {}
   }
 }
 
 /* WHATSAPP */
 function comprar(producto) {
-  const numero = "573001234567"; // CAMBIA ESTO
+  const numero = "573001234567";
   const mensaje = "Hola, quiero comprar: " + producto;
   window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje));
 }
@@ -191,6 +225,8 @@ function cerrarModal() {
   document.getElementById("modal").style.display = "none";
 }
 
+/* INICIO */
+crearFiltros();
 cargarImagenes();
 </script>
 
