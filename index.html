@@ -2,167 +2,159 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MOS Store</title>
 
 <style>
-
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f0f0f;
+  font-family: Arial;
+  background: #0d0d0d;
   color: white;
 }
 
-h1 {
-  text-align: center;
+header {
+  background: black;
   padding: 20px;
+  text-align: center;
   font-size: 28px;
-  letter-spacing: 2px;
+  font-weight: bold;
 }
 
-/* FILTROS */
-.filtros {
+h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
+.container {
+  padding: 20px;
+}
+
+.productos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.producto {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+}
+
+.producto img {
+  width: 100%;
+  border-radius: 10px;
 }
 
 button {
-  margin: 5px;
-  padding: 10px 15px;
+  margin-top: 10px;
+  background: #00c853;
+  color: white;
   border: none;
-  border-radius: 20px;
-  background: #00ff88;
+  padding: 10px;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+  border-radius: 5px;
 }
 
 button:hover {
-  background: #00cc6a;
+  background: #00e676;
 }
-
-/* GRID */
-.catalogo {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-  gap: 20px;
-  padding: 20px;
-}
-
-/* CARD */
-.card {
-  background: #1c1c1c;
-  border-radius: 15px;
-  overflow: hidden;
-  transition: 0.3s;
-  box-shadow: 0 0 10px rgba(0,255,136,0.2);
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-/* IMAGEN */
-.card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-}
-
-/* INFO */
-.info {
-  padding: 15px;
-}
-
-.precio {
-  color: #00ff88;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-/* BOTON WHATSAPP */
-.whatsapp {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  padding: 10px;
-  background: #25D366;
-  color: white;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<h1>MOS Manguelito Official Store</h1>
+<header>MOS Manguelito Official Store 🛒</header>
 
-<div class="filtros" id="filtros"></div>
+<div class="container">
 
-<div class="catalogo" id="catalogo"></div>
+<!-- CAMISETAS -->
+<h2>Camisetas</h2>
+<div class="productos">
+
+<div class="producto">
+<img src="Camisetas/CA-BO-B.png">
+<p>CA-BO-B</p>
+<button onclick="comprar('CA-BO-B')">Comprar</button>
+</div>
+
+<div class="producto">
+<img src="Camisetas/CA-BO-C.png">
+<p>CA-BO-C</p>
+<button onclick="comprar('CA-BO-C')">Comprar</button>
+</div>
+
+<div class="producto">
+<img src="Camisetas/CA-BO-N.png">
+<p>CA-BO-N</p>
+<button onclick="comprar('CA-BO-N')">Comprar</button>
+</div>
+
+</div>
+
+<!-- BILLETERAS -->
+<h2>Billeteras</h2>
+<div class="productos">
+
+<div class="producto">
+<img src="Billeteras/AC-BI-CO-A.png">
+<p>Billetera A</p>
+<button onclick="comprar('Billetera A')">Comprar</button>
+</div>
+
+<div class="producto">
+<img src="Billeteras/AC-BI-FR-CC1.png">
+<p>Billetera CC1</p>
+<button onclick="comprar('Billetera CC1')">Comprar</button>
+</div>
+
+</div>
+
+<!-- LLAVEROS -->
+<h2>Llaveros</h2>
+<div class="productos">
+
+<div class="producto">
+<img src="Llaveros/IT-LL-C1.png">
+<p>Llavero C1</p>
+<button onclick="comprar('Llavero C1')">Comprar</button>
+</div>
+
+<div class="producto">
+<img src="Llaveros/IT-LL-M1.png">
+<p>Llavero M1</p>
+<button onclick="comprar('Llavero M1')">Comprar</button>
+</div>
+
+</div>
+
+<!-- PULSERAS -->
+<h2>Pulseras</h2>
+<div class="productos">
+
+<div class="producto">
+<img src="Pulseras/AC-PU-ME-A.png">
+<p>Pulsera A</p>
+<button onclick="comprar('Pulsera A')">Comprar</button>
+</div>
+
+<div class="producto">
+<img src="Pulseras/AC-PU-ME-B.png">
+<p>Pulsera B</p>
+<button onclick="comprar('Pulsera B')">Comprar</button>
+</div>
+
+</div>
+
+</div>
 
 <script>
-
-const URL = "https://script.google.com/macros/s/AKfycbyiZtM8p8Sy8KqabM7wWbb2xb-iT8BlFjF32EWQVC1kELrVTjgHppaWf5tJEchvwhdN/exec";
-
-let productos = [];
-
-fetch(URL)
-.then(res => res.json())
-.then(data => {
-  productos = data;
-  mostrarProductos(data);
-  crearFiltros(data);
-});
-
-function mostrarProductos(lista){
-  const cont = document.getElementById("catalogo");
-  cont.innerHTML = "";
-
-  lista.forEach(p => {
-
-    const mensaje = encodeURIComponent(
-      "Hola, quiero este producto: " + p.nombre
-    );
-
-    cont.innerHTML += `
-    <div class="card">
-      <img src="${p.imagen}">
-      <div class="info">
-        <h3>${p.nombre}</h3>
-        <p>${p.categoria}</p>
-        <a class="whatsapp" href="https://wa.me/573105218993?text=${mensaje}" target="_blank">
-          Comprar por WhatsApp
-        </a>
-      </div>
-    </div>
-    `;
-  });
+function comprar(producto) {
+  alert("Elegiste: " + producto);
 }
-
-function crearFiltros(data){
-  const categorias = [...new Set(data.map(p => p.categoria))];
-  const cont = document.getElementById("filtros");
-
-  cont.innerHTML = `<button onclick="mostrarProductos(productos)">Todos</button>`;
-
-  categorias.forEach(cat => {
-    cont.innerHTML += `
-      <button onclick="filtrar('${cat}')">${cat}</button>
-    `;
-  });
-}
-
-function filtrar(cat){
-  const filtrados = productos.filter(p => p.categoria === cat);
-  mostrarProductos(filtrados);
-}
-
 </script>
 
 </body>
