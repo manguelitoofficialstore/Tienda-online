@@ -44,10 +44,9 @@ header {
   border-radius: 12px;
   width: 150px;
   text-align: center;
-  overflow: visible; /* 🔥 importante para zoom */
+  overflow: visible;
 }
 
-/* 🔥 ZOOM MEJORADO */
 .producto img {
   width: 100%;
   height: 120px;
@@ -62,7 +61,6 @@ header {
 
 .producto:hover img {
   transform: scale(2);
-  position: relative;
   z-index: 200;
 }
 
@@ -90,7 +88,7 @@ button {
   color: #FFD54F;
   margin: 10% auto;
   padding: 20px;
-  width: 300px;
+  width: 320px;
   border-radius: 10px;
 }
 
@@ -110,7 +108,6 @@ input, select {
 
 <div class="container" id="catalogo"></div>
 
-<!-- MODAL COMPRA -->
 <div id="modalCompra" class="modal">
   <div class="modal-content">
     <span onclick="cerrarModal()" style="cursor:pointer;">✖</span>
@@ -125,9 +122,7 @@ const numero = "573106588480";
 async function cargarProductos() {
   const res = await fetch(urlJSON);
   const data = await res.json();
-
   const contenedor = document.getElementById("catalogo");
-  contenedor.innerHTML = "";
 
   const categorias = [...new Set(data.map(p => p["Categoría"]))];
 
@@ -140,7 +135,15 @@ async function cargarProductos() {
 
     data.filter(p => p["Categoría"] === cat).forEach(prod => {
 
-      const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${prod["Categoría"]}/${prod["Referencia"]}`;
+      let categoriaReal = prod["Categoría"];
+      if (categoriaReal === "Monederos" || categoriaReal === "Tarjeteros") {
+        categoriaReal = "Billeteras";
+      }
+
+      let referencia = prod["Referencia"];
+      if (!referencia.includes(".")) referencia += ".png";
+
+      const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${categoriaReal}/${referencia}`;
 
       const el = document.createElement("div");
       el.className = "producto";
@@ -177,15 +180,15 @@ function abrirCompra(prod) {
   document.getElementById("formCompra").innerHTML = `
     <h3>${prod["Nombre"]}</h3>
 
-    <input id="nombre" placeholder="Nombre completo">
+    <input id="nombre" placeholder="Nombres y apellidos">
     <input id="whatsapp" placeholder="WhatsApp">
 
-    ${prod["Talla"] === "Sí" ? `
-      <select id="talla">
-        <option>Talla</option>
-        <option>XS</option><option>S</option><option>M</option>
-        <option>L</option><option>XL</option><option>XXL</option>
-      </select>` : ""}
+    <label>Cantidad</label>
+    <input id="cantidad" type="number" value="1" min="1" onchange="actualizarTotal(${prod["Precio"]}, '${prod["Talla"]}')">
+
+    <p id="total">Total: $${prod["Precio"]}</p>
+
+    <div id="tallasContainer"></div>
 
     <select id="tipoDireccion" onchange="cambiarDireccion()">
       <option value="">Tipo dirección</option>
@@ -195,10 +198,31 @@ function abrirCompra(prod) {
 
     <div id="direccionExtra"></div>
 
+    <label>
+      <input type="checkbox" id="datos"> Acepto el tratamiento de mis datos
+    </label>
+
     <button onclick='enviarPedido(${JSON.stringify(prod)})'>Enviar pedido</button>
   `;
+
+  actualizarTotal(prod["Precio"], prod["Talla"]);
 }
 
+/* TOTAL + TALLAS */
+function actualizarTotal(precio, usaTalla) {
+  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
+  document.getElementById("total").innerText = "Total: $" + (precio * cantidad);
+
+  if (usaTalla === "Sí") {
+    let html = "<label>Tallas:</label>";
+    ["XS","S","M","L","XL","XXL"].forEach(t => {
+      html += `<div>${t}: <input type="number" id="talla_${t}" min="0" value="0"></div>`;
+    });
+    document.getElementById("tallasContainer").innerHTML = html;
+  }
+}
+
+/* DIRECCIÓN */
 function cambiarDireccion() {
   const tipo = document.getElementById("tipoDireccion").value;
   const div = document.getElementById("direccionExtra");
@@ -207,47 +231,57 @@ function cambiarDireccion() {
     div.innerHTML = `<input id="direccion" placeholder="Dirección completa">`;
   } else {
     div.innerHTML = `
-      <select id="vereda">
-        <option>Vereda</option>
-        <option>Caño del padre</option>
-        <option>Rusia</option>
-        <option>Calderón</option>
-        <option>Las Marías</option>
-      </select>
-
-      <select id="sector">
-        <option>Sector</option>
-        <option>Las cruces</option>
-        <option>Centro</option>
-        <option>San José</option>
-        <option>La Corriente</option>
-        <option>Cartagenita</option>
-        <option>El Canal 1</option>
-        <option>El Canal 2</option>
-        <option>El Laberinto</option>
-        <option>Galilea</option>
-        <option>Pisa Bonito</option>
-        <option>Incora</option>
-      </select>
-
-      <input id="ref" placeholder="Punto de referencia">
+      <input id="municipio" placeholder="Municipio">
+      <input id="corregimiento" placeholder="Corregimiento">
+      <input id="zona" placeholder="Sector o Vereda">
+      <input id="ref" placeholder="Referencia">
     `;
   }
 }
 
+/* ENVIAR PEDIDO */
 function enviarPedido(prod) {
-  const nombre = document.getElementById("nombre").value;
-  const whatsapp = document.getElementById("whatsapp").value;
-  const talla = document.getElementById("talla")?.value || "";
+  if (!document.getElementById("datos").checked) {
+    alert("Debes aceptar los datos");
+    return;
+  }
+
+  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
+  const total = cantidad * prod["Precio"];
+
+  let tallasTexto = "";
+  if (prod["Talla"] === "Sí") {
+    let suma = 0;
+    ["XS","S","M","L","XL","XXL"].forEach(t => {
+      const v = parseInt(document.getElementById("talla_"+t)?.value) || 0;
+      if (v>0) {
+        tallasTexto += `${t}: ${v}\n`;
+        suma += v;
+      }
+    });
+    if (suma !== cantidad) {
+      alert("Las tallas deben coincidir con la cantidad");
+      return;
+    }
+  }
+
+  const fecha = new Date().toLocaleString();
 
   const msg = `
-Pedido:
-Nombre: ${nombre}
-WhatsApp: ${whatsapp}
-Producto: ${prod["Nombre"]}
-Referencia: ${prod["Referencia"]}
-Precio: $${prod["Precio"]}
-Talla: ${talla}
+🛒 PEDIDO MOS STORE
+
+📅 ${fecha}
+
+👤 ${document.getElementById("nombre").value}
+📱 ${document.getElementById("whatsapp").value}
+
+📦 ${prod["Nombre"]}
+🔖 ${prod["Referencia"]}
+
+Cantidad: ${cantidad}
+${tallasTexto}
+
+💰 Total: $${total}
   `;
 
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
