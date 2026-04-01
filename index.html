@@ -36,27 +36,45 @@ h2 {
   gap: 20px;
 }
 
+/* TARJETA PRODUCTO */
 .producto {
   background: #f5f5f5;
   padding: 15px;
   border-radius: 10px;
-  width: 200px;
+  width: 180px;
   text-align: center;
+  transition: 0.3s;
 }
 
+/* HOVER PRODUCTO */
+.producto:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* IMÁGENES */
 .producto img {
-  width: 100%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
   border-radius: 10px;
 }
 
+/* BOTONES */
 button {
   margin-top: 10px;
-  background: #00c853;
-  color: white;
+  background: linear-gradient(135deg, #FFD54F, #FFB300);
+  color: black;
   border: none;
   padding: 10px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 </style>
 </head>
@@ -74,26 +92,19 @@ button {
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-B.png">
 <p>CA-BO-B</p>
+<button onclick="comprar('CA-BO-B')">Comprar</button>
 </div>
 
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-C.png">
 <p>CA-BO-C</p>
+<button onclick="comprar('CA-BO-C')">Comprar</button>
 </div>
 
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-BO-N.png">
 <p>CA-BO-N</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-CO-B.png">
-<p>CA-CO-B</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Camisetas/CA-CO-N.png">
-<p>CA-CO-N</p>
+<button onclick="comprar('CA-BO-N')">Comprar</button>
 </div>
 
 </div>
@@ -105,21 +116,13 @@ button {
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-A.png">
 <p>AC-BI-CO-A</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-CC1.png">
-<p>AC-BI-CO-CC1</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-CO-G1.png">
-<p>AC-BI-CO-G1</p>
+<button onclick="comprar('AC-BI-CO-A')">Comprar</button>
 </div>
 
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Billeteras/AC-BI-FR-CC1.png">
 <p>AC-BI-FR-CC1</p>
+<button onclick="comprar('AC-BI-FR-CC1')">Comprar</button>
 </div>
 
 </div>
@@ -131,16 +134,13 @@ button {
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-C1.png">
 <p>IT-LL-C1</p>
+<button onclick="comprar('IT-LL-C1')">Comprar</button>
 </div>
 
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-M1.png">
 <p>IT-LL-M1</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Llaveros/IT-LL-M2.png">
-<p>IT-LL-M2</p>
+<button onclick="comprar('IT-LL-M1')">Comprar</button>
 </div>
 
 </div>
@@ -152,21 +152,27 @@ button {
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-A.png">
 <p>AC-PU-ME-A</p>
+<button onclick="comprar('AC-PU-ME-A')">Comprar</button>
 </div>
 
 <div class="producto">
 <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-B.png">
 <p>AC-PU-ME-B</p>
-</div>
-
-<div class="producto">
-<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Pulseras/AC-PU-ME-D.png">
-<p>AC-PU-ME-D</p>
+<button onclick="comprar('AC-PU-ME-B')">Comprar</button>
 </div>
 
 </div>
 
 </div>
+
+<script>
+function comprar(producto) {
+  var numero = "573001234567"; // 👈 CAMBIA POR TU NÚMERO
+  var mensaje = "Hola, quiero comprar: " + producto;
+  var url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
+  window.open(url, "_blank");
+}
+</script>
 
 </body>
 </html>
