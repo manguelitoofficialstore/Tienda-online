@@ -12,8 +12,6 @@ body {
   font-family: 'Poppins', sans-serif;
   background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg');
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
 }
 
 header {
@@ -28,8 +26,6 @@ header {
   margin: 20px;
   border-radius: 15px;
 }
-
-.categoria { margin-bottom: 30px; }
 
 .grid {
   display: flex;
@@ -51,33 +47,24 @@ header {
   width: 100%;
   height: 120px;
   object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-.producto:hover {
-  position: relative;
-  z-index: 100;
+  transition: transform 0.3s;
 }
 
 .producto:hover img {
   transform: scale(2);
-  z-index: 200;
+  z-index: 10;
 }
 
 button {
   margin-top: 5px;
-  background: linear-gradient(135deg, #FFD54F, #FFB300);
-  border: none;
   padding: 6px;
-  cursor: pointer;
-  border-radius: 6px;
   width: 100%;
+  cursor: pointer;
 }
 
 .modal {
   display: none;
   position: fixed;
-  z-index: 9999;
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.8);
@@ -89,13 +76,11 @@ button {
   margin: 10% auto;
   padding: 20px;
   width: 320px;
-  border-radius: 10px;
 }
 
 input, select {
   width: 100%;
   margin: 5px 0;
-  padding: 5px;
 }
 </style>
 </head>
@@ -103,14 +88,14 @@ input, select {
 <body>
 
 <header>
-  <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="400">
+<img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="400">
 </header>
 
 <div class="container" id="catalogo"></div>
 
 <div id="modalCompra" class="modal">
   <div class="modal-content">
-    <span onclick="cerrarModal()" style="cursor:pointer;">✖</span>
+    <span onclick="cerrarModal()">✖</span>
     <div id="formCompra"></div>
   </div>
 </div>
@@ -118,6 +103,7 @@ input, select {
 <script>
 const urlJSON = "https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json";
 const numero = "573106588480";
+const scriptURL = "TU_URL_GOOGLE_SCRIPT"; // 🔥 pega aquí tu URL
 
 async function cargarProductos() {
   const res = await fetch(urlJSON);
@@ -128,8 +114,6 @@ async function cargarProductos() {
 
   categorias.forEach(cat => {
     const div = document.createElement("div");
-    div.className = "categoria";
-
     div.innerHTML = `<h2>${cat}</h2><div class="grid"></div>`;
     const grid = div.querySelector(".grid");
 
@@ -153,7 +137,7 @@ async function cargarProductos() {
         <p><b>${prod["Nombre"]}</b></p>
         <p>$${prod["Precio"]}</p>
 
-        <button onclick='abrirCompra(${JSON.stringify(prod)})'>Comprar</button>
+        <button onclick="abrirCompra(this)" data-prod='${JSON.stringify(prod)}'>Comprar</button>
 
         <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
           Preguntar
@@ -173,17 +157,18 @@ function preguntar(ref, nombre, precio) {
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
 }
 
-/* MODAL COMPRA */
-function abrirCompra(prod) {
+/* MODAL */
+function abrirCompra(btn) {
+  const prod = JSON.parse(btn.dataset.prod);
+
   document.getElementById("modalCompra").style.display = "block";
 
   document.getElementById("formCompra").innerHTML = `
     <h3>${prod["Nombre"]}</h3>
 
-    <input id="nombre" placeholder="Nombres y apellidos">
+    <input id="nombre" placeholder="Nombre completo">
     <input id="whatsapp" placeholder="WhatsApp">
 
-    <label>Cantidad</label>
     <input id="cantidad" type="number" value="1" min="1" onchange="actualizarTotal(${prod["Precio"]}, '${prod["Talla"]}')">
 
     <p id="total">Total: $${prod["Precio"]}</p>
@@ -198,25 +183,25 @@ function abrirCompra(prod) {
 
     <div id="direccionExtra"></div>
 
-    <label>
-      <input type="checkbox" id="datos"> Acepto el tratamiento de mis datos
-    </label>
+    <label><input type="checkbox" id="datos"> Acepto datos</label>
 
     <button onclick='enviarPedido(${JSON.stringify(prod)})'>Enviar pedido</button>
+
+    <button onclick="pagar()">Pagar con Nequi</button>
   `;
 
   actualizarTotal(prod["Precio"], prod["Talla"]);
 }
 
-/* TOTAL + TALLAS */
+/* TOTAL */
 function actualizarTotal(precio, usaTalla) {
   const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
   document.getElementById("total").innerText = "Total: $" + (precio * cantidad);
 
   if (usaTalla === "Sí") {
-    let html = "<label>Tallas:</label>";
+    let html = "";
     ["XS","S","M","L","XL","XXL"].forEach(t => {
-      html += `<div>${t}: <input type="number" id="talla_${t}" min="0" value="0"></div>`;
+      html += `${t}: <input type="number" id="talla_${t}" min="0" value="0"><br>`;
     });
     document.getElementById("tallasContainer").innerHTML = html;
   }
@@ -228,63 +213,63 @@ function cambiarDireccion() {
   const div = document.getElementById("direccionExtra");
 
   if (tipo === "urbana") {
-    div.innerHTML = `<input id="direccion" placeholder="Dirección completa">`;
+    div.innerHTML = `<input id="direccion" placeholder="Dirección">`;
   } else {
-    div.innerHTML = `
-      <input id="municipio" placeholder="Municipio">
-      <input id="corregimiento" placeholder="Corregimiento">
-      <input id="zona" placeholder="Sector o Vereda">
-      <input id="ref" placeholder="Referencia">
-    `;
+    div.innerHTML = `<input id="direccion" placeholder="Municipio / Vereda / Referencia">`;
   }
 }
 
-/* ENVIAR PEDIDO */
+/* PEDIDO */
 function enviarPedido(prod) {
+
   if (!document.getElementById("datos").checked) {
-    alert("Debes aceptar los datos");
+    alert("Debes aceptar datos");
     return;
   }
 
-  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
+  const nombre = document.getElementById("nombre").value;
+  const whatsapp = document.getElementById("whatsapp").value;
+  const cantidad = parseInt(document.getElementById("cantidad").value);
   const total = cantidad * prod["Precio"];
-
-  let tallasTexto = "";
-  if (prod["Talla"] === "Sí") {
-    let suma = 0;
-    ["XS","S","M","L","XL","XXL"].forEach(t => {
-      const v = parseInt(document.getElementById("talla_"+t)?.value) || 0;
-      if (v>0) {
-        tallasTexto += `${t}: ${v}\n`;
-        suma += v;
-      }
-    });
-    if (suma !== cantidad) {
-      alert("Las tallas deben coincidir con la cantidad");
-      return;
-    }
-  }
-
   const fecha = new Date().toLocaleString();
+  const orden = Date.now();
+  const direccion = document.getElementById("direccion")?.value || "";
 
+  // 🔥 GUARDAR EN SHEETS
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      fecha,nombre,whatsapp,
+      producto: prod["Nombre"],
+      referencia: prod["Referencia"],
+      cantidad,total,direccion
+    })
+  });
+
+  // 🔥 WHATSAPP
   const msg = `
-🛒 PEDIDO MOS STORE
+🧾 Orden #${orden}
 
-📅 ${fecha}
+${fecha}
 
-👤 ${document.getElementById("nombre").value}
-📱 ${document.getElementById("whatsapp").value}
+${nombre}
+${whatsapp}
 
-📦 ${prod["Nombre"]}
-🔖 ${prod["Referencia"]}
+${prod["Nombre"]}
+Ref: ${prod["Referencia"]}
 
 Cantidad: ${cantidad}
-${tallasTexto}
+Total: $${total}
 
-💰 Total: $${total}
+Dirección: ${direccion}
   `;
 
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
+}
+
+/* PAGO */
+function pagar() {
+  window.open("TU_LINK_QR_AQUI");
 }
 
 function cerrarModal() {
