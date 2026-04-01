@@ -11,13 +11,16 @@
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: #ffffff;
+  background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #111;
 }
 
 /* HEADER */
 header {
-  background: white;
+  background: rgba(255,255,255,0.9);
   padding: 15px;
   text-align: center;
   border-bottom: 2px solid #eee;
@@ -34,6 +37,9 @@ header {
   flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
+  background: rgba(255,255,255,0.85);
+  margin: 20px;
+  border-radius: 15px;
 }
 
 /* TARJETAS */
@@ -61,7 +67,7 @@ header {
   transition: transform 0.3s ease;
 }
 
-/* 🔥 ZOOM FUERTE */
+/* ZOOM FUERTE */
 .producto:hover img {
   transform: scale(2);
   z-index: 999;
@@ -108,20 +114,27 @@ button:hover {
 const usuario = "manguelitoofficialstore";
 const repo = "Tienda-online";
 
-/* TODAS LAS CARPETAS */
-const carpetas = ["Camisetas","Billeteras","Llaveros","Pulseras","Relojes"];
+/* 🔥 TODAS LAS CARPETAS (incluye Tulas) */
+const carpetas = [
+  "Camisetas",
+  "Billeteras",
+  "Llaveros",
+  "Pulseras",
+  "Relojes",
+  "Tulas"
+];
 
 const contenedor = document.getElementById("catalogo");
 
 async function cargarImagenes() {
   for (let carpeta of carpetas) {
     try {
-      const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}`;
+      const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}?t=${new Date().getTime()}`;
       const res = await fetch(url);
       const data = await res.json();
 
       data.forEach(file => {
-        if (file.type === "file") {
+        if (file.download_url) {
 
           const div = document.createElement("div");
           div.className = "producto";
@@ -137,14 +150,14 @@ async function cargarImagenes() {
       });
 
     } catch (error) {
-      console.log("Error en carpeta:", carpeta);
+      console.log("Error en:", carpeta);
     }
   }
 }
 
 /* WHATSAPP */
 function comprar(producto) {
-  const numero = "573106588480"; // 👈 CAMBIA ESTO
+  const numero = "573001234567"; // 👈 CAMBIA ESTO
   const mensaje = "Hola, quiero comprar: " + producto;
   const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
   window.open(url, "_blank");
