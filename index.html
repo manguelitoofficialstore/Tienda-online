@@ -16,14 +16,12 @@ body {
   background-attachment: fixed;
 }
 
-/* HEADER */
 header {
   background: rgba(255,255,255,0.9);
   padding: 15px;
   text-align: center;
 }
 
-/* CONTENEDOR GENERAL */
 .container {
   padding: 20px;
   background: rgba(255,255,255,0.85);
@@ -31,16 +29,8 @@ header {
   border-radius: 15px;
 }
 
-/* CATEGORIA */
-.categoria {
-  margin-bottom: 30px;
-}
+.categoria { margin-bottom: 30px; }
 
-.categoria h2 {
-  margin-left: 10px;
-}
-
-/* GRID PRODUCTOS */
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -48,12 +38,11 @@ header {
   justify-content: center;
 }
 
-/* PRODUCTO */
 .producto {
   background: #fafafa;
   padding: 10px;
   border-radius: 12px;
-  width: 140px;
+  width: 150px;
   text-align: center;
 }
 
@@ -61,33 +50,22 @@ header {
   width: 100%;
   height: 120px;
   object-fit: contain;
-  transition: transform 0.3s;
 }
 
-.producto:hover img {
-  transform: scale(2);
-}
-
-/* BOTONES */
 button {
   margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
-  color: black;
   border: none;
   padding: 6px;
   cursor: pointer;
   border-radius: 6px;
-  font-size: 12px;
   width: 100%;
 }
 
-/* MODAL */
 .modal {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.8);
@@ -100,13 +78,12 @@ button {
   padding: 20px;
   width: 300px;
   border-radius: 10px;
-  text-align: center;
 }
 
-.cerrar {
-  color: white;
-  float: right;
-  cursor: pointer;
+input, select {
+  width: 100%;
+  margin: 5px 0;
+  padding: 5px;
 }
 </style>
 </head>
@@ -114,105 +91,159 @@ button {
 <body>
 
 <header>
-  <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" style="width:400px;">
+  <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="400">
 </header>
 
 <div class="container" id="catalogo"></div>
 
-<!-- MODAL -->
-<div id="modal" class="modal">
+<!-- MODAL COMPRA -->
+<div id="modalCompra" class="modal">
   <div class="modal-content">
-    <span class="cerrar" onclick="cerrarModal()">✖</span>
-    <h3 id="modalTitulo"></h3>
-    <img id="modalImg" style="width:100%; margin:10px 0;">
-    <p>Producto disponible en MOS Store</p>
+    <span onclick="cerrarModal()" style="cursor:pointer;">✖</span>
+    <div id="formCompra"></div>
   </div>
 </div>
 
 <script>
-const usuario = "manguelitoofficialstore";
-const repo = "Tienda-online";
+const urlJSON = "https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json";
+const numero = "573106588480";
 
-const carpetas = [
-  "Camisetas",
-  "Pulseras",
-  "Tulas",
-  "Billeteras",
-  "Llaveros",
-  "Banderas",
-  "Relojes",
-  "Gorras"
-];
+async function cargarProductos() {
+  const res = await fetch(urlJSON);
+  const data = await res.json();
 
-const contenedor = document.getElementById("catalogo");
-
-async function cargarImagenes() {
+  const contenedor = document.getElementById("catalogo");
   contenedor.innerHTML = "";
 
-  for (let carpeta of carpetas) {
-    try {
-      const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}?t=${new Date().getTime()}`;
-      const res = await fetch(url);
-      const data = await res.json();
+  const categorias = [...new Set(data.map(p => p["Categoría"]))];
 
-      if (!Array.isArray(data) || data.length === 0) continue;
+  categorias.forEach(cat => {
+    const div = document.createElement("div");
+    div.className = "categoria";
 
-      // 👉 CREAR BLOQUE DE CATEGORIA
-      const categoriaDiv = document.createElement("div");
-      categoriaDiv.className = "categoria";
+    div.innerHTML = `<h2>${cat}</h2><div class="grid"></div>`;
+    const grid = div.querySelector(".grid");
 
-      const titulo = document.createElement("h2");
-      titulo.innerText = carpeta;
+    data.filter(p => p["Categoría"] === cat).forEach(prod => {
 
-      const grid = document.createElement("div");
-      grid.className = "grid";
+      const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${prod["Categoría"]}/${prod["Referencia"]}`;
 
-      data.forEach(file => {
-        if (file.download_url) {
+      const el = document.createElement("div");
+      el.className = "producto";
 
-          const producto = document.createElement("div");
-          producto.className = "producto";
+      el.innerHTML = `
+        <img src="${imgURL}">
+        <p><b>${prod["Nombre"]}</b></p>
+        <p>$${prod["Precio"]}</p>
 
-          producto.innerHTML = `
-            <img src="${file.download_url}">
-            <p>${file.name}</p>
-            <button onclick="comprar('${file.name}')">Comprar</button>
-            <button onclick="verDetalles('${file.name}','${file.download_url}')">Detalles</button>
-          `;
+        <button onclick='abrirCompra(${JSON.stringify(prod)})'>Comprar</button>
 
-          grid.appendChild(producto);
-        }
-      });
+        <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
+          Preguntar
+        </button>
+      `;
 
-      categoriaDiv.appendChild(titulo);
-      categoriaDiv.appendChild(grid);
-      contenedor.appendChild(categoriaDiv);
+      grid.appendChild(el);
+    });
 
-    } catch (error) {
-      console.log("Error en:", carpeta);
-    }
-  }
+    contenedor.appendChild(div);
+  });
 }
 
 /* WHATSAPP */
-function comprar(producto) {
-  const numero = "573106588480";
-  const mensaje = "Hola, quiero comprar: " + producto;
-  window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje));
+function preguntar(ref, nombre, precio) {
+  const msg = `Me interesa\nReferencia: ${ref}\nProducto: ${nombre}\nPrecio: $${precio}`;
+  window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
 }
 
-/* MODAL */
-function verDetalles(nombre, img) {
-  document.getElementById("modal").style.display = "block";
-  document.getElementById("modalTitulo").innerText = nombre;
-  document.getElementById("modalImg").src = img;
+/* MODAL COMPRA */
+function abrirCompra(prod) {
+  document.getElementById("modalCompra").style.display = "block";
+
+  document.getElementById("formCompra").innerHTML = `
+    <h3>${prod["Nombre"]}</h3>
+
+    <input id="nombre" placeholder="Nombre completo">
+    <input id="whatsapp" placeholder="WhatsApp">
+
+    ${prod["Talla"] === "Sí" ? `
+      <select id="talla">
+        <option>Talla</option>
+        <option>XS</option><option>S</option><option>M</option>
+        <option>L</option><option>XL</option><option>XXL</option>
+      </select>` : ""}
+
+    <select id="tipoDireccion" onchange="cambiarDireccion()">
+      <option value="">Tipo dirección</option>
+      <option value="urbana">Urbana</option>
+      <option value="rural">Rural</option>
+    </select>
+
+    <div id="direccionExtra"></div>
+
+    <button onclick='enviarPedido(${JSON.stringify(prod)})'>Enviar pedido</button>
+  `;
+}
+
+function cambiarDireccion() {
+  const tipo = document.getElementById("tipoDireccion").value;
+  const div = document.getElementById("direccionExtra");
+
+  if (tipo === "urbana") {
+    div.innerHTML = `<input id="direccion" placeholder="Dirección completa">`;
+  } else {
+    div.innerHTML = `
+      <select id="vereda">
+        <option>Vereda</option>
+        <option>Caño del padre</option>
+        <option>Rusia</option>
+        <option>Calderón</option>
+        <option>Las Marías</option>
+      </select>
+
+      <select id="sector">
+        <option>Sector</option>
+        <option>Las cruces</option>
+        <option>Centro</option>
+        <option>San José</option>
+        <option>La Corriente</option>
+        <option>Cartagenita</option>
+        <option>El Canal 1</option>
+        <option>El Canal 2</option>
+        <option>El Laberinto</option>
+        <option>Galilea</option>
+        <option>Pisa Bonito</option>
+        <option>Incora</option>
+      </select>
+
+      <input id="ref" placeholder="Punto de referencia">
+    `;
+  }
+}
+
+function enviarPedido(prod) {
+  const nombre = document.getElementById("nombre").value;
+  const whatsapp = document.getElementById("whatsapp").value;
+  const talla = document.getElementById("talla")?.value || "";
+
+  const msg = `
+Pedido:
+Nombre: ${nombre}
+WhatsApp: ${whatsapp}
+Producto: ${prod["Nombre"]}
+Referencia: ${prod["Referencia"]}
+Precio: $${prod["Precio"]}
+Talla: ${talla}
+  `;
+
+  window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
 }
 
 function cerrarModal() {
-  document.getElementById("modal").style.display = "none";
+  document.getElementById("modalCompra").style.display = "none";
 }
 
-cargarImagenes();
+cargarProductos();
 </script>
 
 </body>
