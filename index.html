@@ -15,17 +15,21 @@
         
         .container { padding: 20px; max-width: 1200px; margin: 20px auto; background: rgba(255,255,255,0.85); border-radius: 15px; }
         
+        /* LÍNEA DIVISORA EN DEGRADADO NEGRO A DORADO */
         .categoria-titulo {
-            width: 100%; border-bottom: 3px solid #FFD54F;
+            width: 100%; 
+            border-bottom: 4px solid;
+            border-image: linear-gradient(to right, #000000, #FFD54F) 1;
             margin: 40px 0 20px 0; padding-bottom: 10px;
-            color: #333; text-transform: uppercase; font-weight: 700;
+            color: #000; text-transform: uppercase; font-weight: 700;
+            font-size: 1.5rem;
         }
 
-        /* LAYOUT CORREGIDO: Cuadrícula responsiva */
+        /* GRID LAYOUT */
         .grid { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 25px;
+            gap: 30px;
             padding-bottom: 50px;
         }
 
@@ -46,6 +50,7 @@
             z-index: 999 !important; 
         }
 
+        /* BOTONES */
         .btn-mos {
             margin-top: 8px; border: none; padding: 10px; cursor: pointer; 
             width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s;
@@ -132,7 +137,7 @@ async function cargar() {
                 card.className = "producto";
                 card.innerHTML = `
                     <img src="${imgURL}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
-                    <p style="height:40px; overflow:hidden;"><b>${p.Nombre}</b></p>
+                    <p style="height:40px; overflow:hidden; margin:10px 0;"><b>${p.Nombre}</b></p>
                     <p style="color:#555;">$${p.Precio}</p>
                     <button class="btn-mos" onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
                     <button class="btn-mos" onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
@@ -151,8 +156,10 @@ function abrirModal(p) {
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
     
-    // Solo generar tallas si la columna "Talla" es "Sí"
-    if (p.Talla === "Sí") {
+    // CORRECCIÓN TALLA: Limpiamos espacios y comparamos
+    const necesitaTalla = p.Talla && p.Talla.trim().toLowerCase() === "sí";
+    
+    if (necesitaTalla) {
         generarTallas(1);
     } else {
         document.getElementById("contenedorTallas").innerHTML = "";
@@ -187,8 +194,8 @@ function actualizarPrecio(c) {
 document.getElementById("mCant").oninput = (e) => {
     let c = parseInt(e.target.value);
     if(isNaN(c) || c < 1) c = 1;
-    // Solo actualizar tallas si el producto las requiere
-    if (productoActual.Talla === "Sí") {
+    // CORRECCIÓN TALLA EN INPUT
+    if (productoActual.Talla && productoActual.Talla.trim().toLowerCase() === "sí") {
         generarTallas(c);
     }
     actualizarPrecio(c);
@@ -200,7 +207,9 @@ function enviarPedido() {
     const cant = document.getElementById("mCant").value;
     
     let mensajeTallas = "";
-    if (productoActual.Talla === "Sí") {
+    const necesitaTalla = productoActual.Talla && productoActual.Talla.trim().toLowerCase() === "sí";
+
+    if (necesitaTalla) {
         const selects = document.querySelectorAll(".sel-talla-final");
         let lista = [];
         selects.forEach((s, i) => lista.push(`Unid ${i+1}: ${s.value}`));
