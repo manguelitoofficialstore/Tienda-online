@@ -54,7 +54,7 @@ header {
   transform: scale(2);
 }
 
-/* 🔥 BOTONES MEJORADOS */
+/* 🔥 BOTONES BONITOS */
 button {
   margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
@@ -156,12 +156,17 @@ async function cargarProductos() {
           <p><b>${prod["Nombre"]}</b></p>
           <p>$${prod["Precio"]}</p>
 
-          <button onclick="abrirCompra(${index})">Comprar</button>
+          <button class="btn-comprar">Comprar</button>
 
           <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
             Preguntar
           </button>
         `;
+
+        // 🔥 EVENTO REAL (SOLUCIÓN)
+        el.querySelector(".btn-comprar").addEventListener("click", () => {
+          abrirCompra(index);
+        });
 
         grid.appendChild(el);
       });
@@ -205,7 +210,7 @@ function abrirCompra(index) {
     <div id="direccionExtra"></div>
 
     <label>
-      <input type="checkbox" id="datos"> Acepto el tratamiento de datos
+      <input type="checkbox" id="datos"> Acepto tratamiento de datos
     </label>
 
     <button onclick="enviarPedido(${index})">Enviar pedido</button>
@@ -214,19 +219,17 @@ function abrirCompra(index) {
   actualizarTotal(prod["Precio"], prod["Talla"]);
 }
 
-/* TOTAL + TALLAS */
+/* TOTAL */
 function actualizarTotal(precio, usaTalla) {
   const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
   document.getElementById("total").innerText = "Total: $" + (precio * cantidad);
 
   if (usaTalla === "Sí") {
-    let html = "<label>Tallas:</label>";
+    let html = "";
     ["XS","S","M","L","XL","XXL"].forEach(t => {
       html += `${t}: <input type="number" id="talla_${t}" min="0" value="0"><br>`;
     });
     document.getElementById("tallasContainer").innerHTML = html;
-  } else {
-    document.getElementById("tallasContainer").innerHTML = "";
   }
 }
 
@@ -259,22 +262,6 @@ function enviarPedido(index) {
   const orden = Date.now();
   const direccion = document.getElementById("direccion")?.value || "";
 
-  let tallasTexto = "";
-  if (prod["Talla"] === "Sí") {
-    let suma = 0;
-    ["XS","S","M","L","XL","XXL"].forEach(t => {
-      const v = parseInt(document.getElementById("talla_"+t)?.value) || 0;
-      if (v > 0) {
-        tallasTexto += `${t}: ${v}\n`;
-        suma += v;
-      }
-    });
-    if (suma !== cantidad) {
-      alert("Las tallas deben coincidir con la cantidad");
-      return;
-    }
-  }
-
   const msg = `
 🧾 Orden #${orden}
 
@@ -287,8 +274,6 @@ function enviarPedido(index) {
 🔖 ${prod["Referencia"]}
 
 Cantidad: ${cantidad}
-${tallasTexto}
-
 💰 Total: $${total}
 
 📍 ${direccion}
