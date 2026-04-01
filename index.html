@@ -4,22 +4,30 @@
 <meta charset="UTF-8">
 <title>MOS Store</title>
 
+<!-- TIPOGRAFÍA -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
 <style>
 body {
   margin: 0;
-  font-family: Arial;
-  background: white;
-  color: black;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+  color: #111;
 }
 
+/* HEADER */
 header {
-  background: #eeeeee;
-  padding: 20px;
+  background: white;
+  padding: 15px;
   text-align: center;
-  font-size: 28px;
-  font-weight: bold;
+  border-bottom: 2px solid #eee;
 }
 
+.logo {
+  width: 120px;
+}
+
+/* CONTENEDOR */
 .container {
   padding: 20px;
   display: flex;
@@ -28,49 +36,66 @@ header {
   gap: 15px;
 }
 
-/* TARJETA */
+/* TARJETAS */
 .producto {
-  background: #f5f5f5;
+  background: #fafafa;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 140px;
   text-align: center;
-  position: relative;
+  transition: 0.3s;
+  border: 1px solid #eee;
 }
 
-/* IMAGEN */
+.producto:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* IMÁGENES */
 .producto img {
   width: 100%;
   height: 120px;
   object-fit: contain;
-  background: white;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 
-/* 🔥 ZOOM FUERTE REAL */
+/* ZOOM */
 .producto:hover img {
-  transform: scale(2.2); /* 👈 aquí puedes cambiar */
-  position: relative;
-  z-index: 999;
+  transform: scale(2);
+  z-index: 10;
 }
 
-/* BOTONES */
+/* TEXTO */
+.producto p {
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+/* BOTÓN */
 button {
-  margin-top: 8px;
+  margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
   color: black;
   border: none;
-  padding: 8px;
+  padding: 7px;
   cursor: pointer;
   border-radius: 8px;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 </style>
 </head>
 
 <body>
 
-<header>MOS Manguelito Official Store 🛒</header>
+<header>
+  <img class="logo" src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/LOGO_MOS.png">
+</header>
 
 <div class="container" id="catalogo"></div>
 
@@ -109,8 +134,9 @@ async function cargarImagenes() {
   }
 }
 
+/* WHATSAPP */
 function comprar(producto) {
-  const numero = "573001234567";
+  const numero = "573001234567"; // 👈 CAMBIA ESTO
   const mensaje = "Hola, quiero comprar: " + producto;
   const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
   window.open(url, "_blank");
