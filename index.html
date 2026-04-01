@@ -7,81 +7,139 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         body { 
-            margin: 0; font-family: 'Poppins', sans-serif; 
+            margin: 0;
+            font-family: 'Poppins', sans-serif; 
             background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg') no-repeat center center fixed;
             background-size: cover;
         }
-        header { background: rgba(255,255,255,0.9); padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        header {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
         
-        .container { padding: 20px; max-width: 1200px; margin: 20px auto; background: rgba(255,255,255,0.85); border-radius: 15px; }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.85);
+            border-radius: 15px;
+        }
         
-        /* LÍNEA DIVISORA EN DEGRADADO NEGRO A DORADO */
         .categoria-titulo {
-            width: 100%; 
+            width: 100%;
             border-bottom: 4px solid;
             border-image: linear-gradient(to right, #000000, #FFD54F) 1;
-            margin: 40px 0 20px 0; padding-bottom: 10px;
-            color: #000; text-transform: uppercase; font-weight: 700;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            color: #000;
+            text-transform: uppercase;
+            font-weight: 700;
             font-size: 1.5rem;
         }
 
-        /* GRID LAYOUT */
-        .grid { 
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 30px;
             padding-bottom: 50px;
         }
 
-        .producto { 
-            background: white; padding: 15px; border-radius: 12px; 
-            text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; overflow: visible; 
+        .producto {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: visible;
         }
 
-        /* ZOOM AL DOBLE */
-        .producto img { 
-            width: 100%; height: 140px; object-fit: contain; 
-            transition: transform 0.3s ease-in-out; 
-            cursor: pointer; position: relative; z-index: 10;
-        }
-        .producto:hover img { 
-            transform: scale(2) !important; 
-            z-index: 999 !important; 
+        .producto img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
         }
 
-        /* BOTONES */
+        .producto:hover img {
+            transform: scale(2) !important;
+            z-index: 999 !important;
+        }
+
         .btn-mos {
-            margin-top: 8px; border: none; padding: 10px; cursor: pointer; 
-            width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s;
-            background: #FFD54F; color: #000; display: block;
+            margin-top: 8px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: #FFD54F;
+            color: #000;
+            display: block;
         }
-        .btn-mos:hover { background: #000 !important; color: #FFD54F !important; }
 
-        /* MODAL */
-        .modal { 
-            display: none; position: fixed; z-index: 10000; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(5px);
+        .btn-mos:hover {
+            background: #000 !important;
+            color: #FFD54F !important;
         }
-        .modal-content { 
-            background: #000; color: #FFD54F; 
-            margin: 5% auto; padding: 25px; width: 90%; max-width: 400px; 
-            border-radius: 15px; border: 2px solid #FFD54F;
-            max-height: 85vh; overflow-y: auto;
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
         }
-        .modal-content input, .modal-content select { 
-            width: 100%; margin: 10px 0; padding: 12px; border-radius: 5px; 
-            border: 1px solid #FFD54F; background: #1a1a1a; color: white;
+
+        .modal-content {
+            background: #000;
+            color: #FFD54F;
+            margin: 5% auto;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            border: 2px solid #FFD54F;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #FFD54F;
+            background: #1a1a1a;
+            color: white;
             box-sizing: border-box;
         }
-        .talla-item { border: 1px dashed #FFD54F; padding: 10px; margin: 10px 0; border-radius: 8px; }
+
+        .talla-item {
+            border: 1px dashed #FFD54F;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="300">
+    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="300" alt="MOS Store">
 </header>
 
 <div class="container" id="catalogo">
@@ -99,7 +157,7 @@
         <label>Cantidad:</label>
         <input type="number" id="mCant" value="1" min="1">
         
-        <div id="contenedorTallas"></div>
+        <div id="contenedorTallas" style="display:none;"></div>
 
         <h4 id="mTotalText" style="text-align:center; margin:20px 0;">Total: $0</h4>
         <button onclick="enviarPedido()" class="btn-mos" style="padding:15px; font-size:1.1em;">ENVIAR A WHATSAPP</button>
@@ -109,6 +167,12 @@
 <script>
 const numeroWA = "573106588480";
 let productoActual = null;
+
+function requiereTalla(p) {
+    if (!p || p.Talla == null) return false;
+    const valor = String(p.Talla).trim().toLowerCase();
+    return valor === "sí" || valor === "si";
+}
 
 async function cargar() {
     try {
@@ -122,12 +186,14 @@ async function cargar() {
         categorias.forEach(cat => {
             const seccion = document.createElement("div");
             seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
+
             const grid = document.createElement("div");
             grid.className = "grid";
 
             data.filter(p => p["Categoría"] === cat).forEach(p => {
                 let carpeta = p["Categoría"];
                 if (carpeta === "Monederos" || carpeta === "Tarjeteros") carpeta = "Billeteras";
+
                 let ref = p["Referencia"];
                 if (!ref.includes(".")) ref += ".png";
                 
@@ -139,37 +205,49 @@ async function cargar() {
                     <img src="${imgURL}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
                     <p style="height:40px; overflow:hidden; margin:10px 0;"><b>${p.Nombre}</b></p>
                     <p style="color:#555;">$${p.Precio}</p>
-                    <button class="btn-mos" onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
-                    <button class="btn-mos" onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
+                    <button class="btn-mos btn-comprar">Comprar</button>
+                    <button class="btn-mos btn-preguntar">Preguntar</button>
                 `;
+
+                card.querySelector(".btn-comprar").addEventListener("click", () => abrirModal(p));
+                card.querySelector(".btn-preguntar").addEventListener("click", () => preguntar(p));
+
                 grid.appendChild(card);
             });
+
             seccion.appendChild(grid);
             contPrincipal.appendChild(seccion);
         });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error(e);
+        document.getElementById("catalogo").innerHTML = "<h3 style='text-align:center;'>No se pudo cargar el catálogo.</h3>";
+    }
 }
 
 function abrirModal(p) {
     productoActual = p;
+
     document.getElementById("mTitulo").innerText = p.Nombre;
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
-    
-    // CORRECCIÓN TALLA: Limpiamos espacios y comparamos
-    const necesitaTalla = p.Talla && p.Talla.trim().toLowerCase() === "sí";
-    
-    if (necesitaTalla) {
+
+    const cont = document.getElementById("contenedorTallas");
+
+    if (requiereTalla(p)) {
+        cont.style.display = "block";
         generarTallas(1);
     } else {
-        document.getElementById("contenedorTallas").innerHTML = "";
+        cont.innerHTML = "";
+        cont.style.display = "none";
     }
+
     actualizarPrecio(1);
 }
 
 function generarTallas(cant) {
     const cont = document.getElementById("contenedorTallas");
     cont.innerHTML = "<p style='font-size:0.85em; margin-bottom:5px;'>Elige tallas:</p>";
+
     for (let i = 1; i <= cant; i++) {
         const div = document.createElement("div");
         div.className = "talla-item";
@@ -187,61 +265,88 @@ function generarTallas(cant) {
     }
 }
 
-function actualizarPrecio(c) {
-    document.getElementById("mTotalText").innerText = "Total: $" + (c * productoActual.Precio);
+function actualizarPrecio(cantidad) {
+    const precio = Number(productoActual?.Precio || 0);
+    document.getElementById("mTotalText").innerText = "Total: $" + (cantidad * precio);
 }
 
-document.getElementById("mCant").oninput = (e) => {
-    let c = parseInt(e.target.value);
-    if(isNaN(c) || c < 1) c = 1;
-    // CORRECCIÓN TALLA EN INPUT
-    if (productoActual.Talla && productoActual.Talla.trim().toLowerCase() === "sí") {
+document.getElementById("mCant").addEventListener("input", (e) => {
+    let c = parseInt(e.target.value, 10);
+    if (isNaN(c) || c < 1) c = 1;
+
+    e.target.value = c;
+
+    const cont = document.getElementById("contenedorTallas");
+
+    if (requiereTalla(productoActual)) {
+        cont.style.display = "block";
         generarTallas(c);
+    } else {
+        cont.innerHTML = "";
+        cont.style.display = "none";
     }
+
     actualizarPrecio(c);
-};
+});
 
 function enviarPedido() {
-    const nom = document.getElementById("mNombre").value;
-    const dir = document.getElementById("mDireccion").value;
-    const cant = document.getElementById("mCant").value;
-    
-    let mensajeTallas = "";
-    const necesitaTalla = productoActual.Talla && productoActual.Talla.trim().toLowerCase() === "sí";
+    const nom = document.getElementById("mNombre").value.trim();
+    const dir = document.getElementById("mDireccion").value.trim();
+    const cant = parseInt(document.getElementById("mCant").value, 10) || 1;
 
-    if (necesitaTalla) {
-        const selects = document.querySelectorAll(".sel-talla-final");
-        let lista = [];
-        selects.forEach((s, i) => lista.push(`Unid ${i+1}: ${s.value}`));
-        mensajeTallas = `*Tallas:* \n- ${lista.join('\n- ')}\n\n`;
+    if (!productoActual) {
+        alert("No hay producto seleccionado.");
+        return;
     }
 
-    if(!nom || !dir) {
+    if (!nom || !dir) {
         alert("Faltan datos de envío.");
         return;
     }
 
-    const texto = `🧾 *ORDEN DE PEDIDO - MANGUELITO*\n\n` +
-                  `*Producto:* ${productoActual.Nombre}\n` +
-                  `*Ref:* ${productoActual.Referencia}\n` +
-                  `*Cantidad:* ${cant}\n` +
-                  mensajeTallas +
-                  `*Total:* $${cant * productoActual.Precio}\n\n` +
-                  `*Cliente:* ${nom}\n` +
-                  `*Dirección:* ${dir}`;
-    
-    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`, '_blank');
+    let mensajeTallas = "";
+    const necesitaTalla = requiereTalla(productoActual);
+
+    if (necesitaTalla) {
+        const selects = document.querySelectorAll(".sel-talla-final");
+        let lista = [];
+        selects.forEach((s, i) => {
+            lista.push(`Unid ${i + 1}: ${s.value}`);
+        });
+        mensajeTallas = `*Tallas:* \n- ${lista.join('\n- ')}\n\n`;
+    }
+
+    const precio = Number(productoActual.Precio || 0);
+    const total = cant * precio;
+
+    const texto =
+        `🧾 *ORDEN DE PEDIDO - MANGUELITO*\n\n` +
+        `*Producto:* ${productoActual.Nombre}\n` +
+        `*Ref:* ${productoActual.Referencia}\n` +
+        `*Cantidad:* ${cant}\n` +
+        mensajeTallas +
+        `*Total:* $${total}\n\n` +
+        `*Cliente:* ${nom}\n` +
+        `*Dirección:* ${dir}`;
+
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`, "_blank");
 }
 
 function preguntar(p) {
     const msg = `Hola! Me interesa este producto: ${p.Nombre}`;
-    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
-function cerrar() { document.getElementById("modalCompra").style.display = "none"; }
-window.onclick = (e) => { if (e.target == document.getElementById("modalCompra")) cerrar(); };
+function cerrar() {
+    document.getElementById("modalCompra").style.display = "none";
+}
+
+window.onclick = (e) => {
+    if (e.target === document.getElementById("modalCompra")) cerrar();
+};
 
 cargar();
 </script>
+
 </body>
 </html>
