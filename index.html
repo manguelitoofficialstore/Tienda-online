@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>MOS Store</title>
 
-<!-- TIPOGRAFÍA -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -18,19 +17,12 @@ body {
   color: #111;
 }
 
-/* HEADER */
 header {
   background: rgba(255,255,255,0.9);
   padding: 15px;
   text-align: center;
-  border-bottom: 2px solid #eee;
 }
 
-.logo {
-  width: 480px;
-}
-
-/* CONTENEDOR */
 .container {
   padding: 20px;
   display: flex;
@@ -42,58 +34,66 @@ header {
   border-radius: 15px;
 }
 
-/* TARJETAS */
 .producto {
   background: #fafafa;
   padding: 10px;
   border-radius: 12px;
   width: 140px;
   text-align: center;
-  border: 1px solid #eee;
-  transition: 0.3s;
 }
 
-.producto:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-/* IMÁGENES */
 .producto img {
   width: 100%;
   height: 120px;
   object-fit: contain;
-  background: white;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 
-/* ZOOM FUERTE */
 .producto:hover img {
   transform: scale(2);
-  z-index: 999;
 }
 
-/* TEXTO */
-.producto p {
-  font-size: 12px;
-  margin: 8px 0;
-}
-
-/* BOTÓN */
+/* BOTONES */
 button {
   margin-top: 5px;
   background: linear-gradient(135deg, #FFD54F, #FFB300);
   color: black;
   border: none;
-  padding: 7px;
+  padding: 6px;
   cursor: pointer;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 6px;
   font-size: 12px;
+  display: block;
+  width: 100%;
 }
 
-button:hover {
-  transform: scale(1.05);
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+  background: black;
+  color: #FFD54F;
+  margin: 10% auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.cerrar {
+  color: white;
+  float: right;
+  cursor: pointer;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -101,27 +101,26 @@ button:hover {
 <body>
 
 <header>
- <img 
-  src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/LOGO_MOS.png"
-  style="width:200px; display:block; margin:auto;"
->
+  <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/LOGO_MOS.png" style="width:200px;">
 </header>
 
 <div class="container" id="catalogo"></div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="cerrar" onclick="cerrarModal()">✖</span>
+    <h3 id="modalTitulo"></h3>
+    <img id="modalImg" style="width:100%; margin:10px 0;">
+    <p id="modalTexto">Producto disponible en MOS Store</p>
+  </div>
+</div>
 
 <script>
 const usuario = "manguelitoofficialstore";
 const repo = "Tienda-online";
 
-/* 🔥 TODAS LAS CARPETAS (incluye Tulas) */
-const carpetas = [
-  "Camisetas",
-  "Billeteras",
-  "Llaveros",
-  "Pulseras",
-  "Relojes",
-  "Tulas"
-];
+const carpetas = ["Camisetas","Billeteras","Llaveros","Pulseras","Relojes","Tulas"];
 
 const contenedor = document.getElementById("catalogo");
 
@@ -142,24 +141,33 @@ async function cargarImagenes() {
             <img src="${file.download_url}">
             <p>${file.name}</p>
             <button onclick="comprar('${file.name}')">Comprar</button>
+            <button onclick="verDetalles('${file.name}','${file.download_url}')">Detalles</button>
           `;
 
           contenedor.appendChild(div);
         }
       });
 
-    } catch (error) {
-      console.log("Error en:", carpeta);
-    }
+    } catch (error) {}
   }
 }
 
 /* WHATSAPP */
 function comprar(producto) {
-  const numero = "573001234567"; // 👈 CAMBIA ESTO
+  const numero = "573001234567"; // CAMBIA ESTO
   const mensaje = "Hola, quiero comprar: " + producto;
-  const url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
-  window.open(url, "_blank");
+  window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje));
+}
+
+/* MODAL */
+function verDetalles(nombre, img) {
+  document.getElementById("modal").style.display = "block";
+  document.getElementById("modalTitulo").innerText = nombre;
+  document.getElementById("modalImg").src = img;
+}
+
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
 }
 
 cargarImagenes();
