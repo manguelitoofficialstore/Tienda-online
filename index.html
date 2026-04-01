@@ -6,90 +6,60 @@
     <title>MOS Store - Manguelito</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --amarillo-calido: #FFD54F;
-        }
-
         body { 
-            margin: 0; 
-            font-family: 'Poppins', sans-serif; 
+            margin: 0; font-family: 'Poppins', sans-serif; 
             background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg') no-repeat center center fixed;
             background-size: cover;
         }
-
         header { background: rgba(255,255,255,0.9); padding: 15px; text-align: center; }
-
         .container { padding: 20px; max-width: 1100px; margin: 20px auto; background: rgba(255,255,255,0.8); border-radius: 15px; }
+        .grid { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; padding: 50px 0; }
 
-        .grid { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; padding: 40px 0; }
-
-        /* EFECTO ZOOM AL DOBLE - CORREGIDO */
+        /* --- ZOOM AL DOBLE --- */
         .producto { 
             background: white; padding: 15px; border-radius: 12px; width: 160px; 
             text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; overflow: visible; /* CRÍTICO: permite que la imagen sobresalga */
+            position: relative; overflow: visible; /* Importante para que no se corte el zoom */
         }
-        
         .producto img { 
             width: 100%; height: 130px; object-fit: contain; 
-            transition: transform 0.3s ease; 
-            cursor: pointer;
-            position: relative;
-            z-index: 5;
+            transition: transform 0.3s ease-in-out; 
+            cursor: pointer; position: relative; z-index: 10;
         }
-
-        /* ZOOM AL DOBLE (scale 2) */
+        /* Forzamos el zoom al doble (200%) */
         .producto:hover img { 
             transform: scale(2) !important; 
-            z-index: 999; 
+            z-index: 999 !important; 
         }
 
-        /* BOTONES AMARILLOS (AMBOS) */
-        .producto button { 
-            margin-top: 10px; 
-            background-color: var(--amarillo-calido) !important; 
-            color: black !important; 
-            border: none; 
-            padding: 10px; 
-            cursor: pointer; 
-            width: 100%; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            transition: 0.3s;
-            display: block;
+        /* --- BOTONES CON HOVER --- */
+        .btn-mos {
+            margin-top: 8px; border: none; padding: 10px; cursor: pointer; 
+            width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s;
+            background: #FFD54F; color: #000; display: block;
         }
-        
-        /* HOVER A NEGRO */
-        .producto button:hover { 
-            background-color: black !important; 
-            color: var(--amarillo-calido) !important; 
+        .btn-mos:hover {
+            background: #000 !important; color: #FFD54F !important;
         }
 
-        /* MODAL */
+        /* --- MODAL --- */
         .modal { 
             display: none; position: fixed; z-index: 10000; 
             left: 0; top: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.9); backdrop-filter: blur(5px);
         }
         .modal-content { 
-            background: #000; color: var(--amarillo-calido); 
+            background: #000; color: #FFD54F; 
             margin: 5% auto; padding: 25px; width: 90%; max-width: 380px; 
-            border-radius: 15px; border: 2px solid var(--amarillo-calido);
-            max-height: 80vh; overflow-y: auto;
+            border-radius: 15px; border: 2px solid #FFD54F;
+            max-height: 85vh; overflow-y: auto; position: relative;
         }
-        
         .modal-content input, .modal-content select { 
             width: 100%; margin: 10px 0; padding: 12px; border-radius: 5px; 
-            border: 1px solid var(--amarillo-calido); background: #1a1a1a; color: white;
+            border: 1px solid #FFD54F; background: #1a1a1a; color: white;
             box-sizing: border-box; display: block;
         }
-
-        .talla-caja { 
-            border: 1px dashed var(--amarillo-calido); 
-            padding: 10px; 
-            margin-top: 10px; 
-            border-radius: 8px;
-        }
+        .talla-item { border: 1px dashed #FFD54F; padding: 10px; margin: 10px 0; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -104,20 +74,19 @@
 
 <div id="modalCompra" class="modal">
     <div class="modal-content">
-        <span onclick="cerrar()" style="float:right; cursor:pointer; color:white; font-size:24px;">&times;</span>
-        <h3 id="mTitulo">Pedido</h3>
+        <span onclick="cerrar()" style="float:right; cursor:pointer; color:white; font-size:25px;">&times;</span>
+        <h3 id="mTitulo">Finalizar Compra</h3>
         
         <input type="text" id="mNombre" placeholder="Tu nombre completo">
         <input type="text" id="mDireccion" placeholder="Dirección de envío">
         
-        <label>Cantidad:</label>
+        <label>¿Cuántas unidades quieres?</label>
         <input type="number" id="mCant" value="1" min="1">
         
-        <div id="contenedorTallas">
-            </div>
+        <div id="contenedorTallas"></div>
 
-        <h4 id="mTotalText" style="text-align:center; margin:20px 0;">Total: $0</h4>
-        <button id="btnFinal" style="background:var(--amarillo-calido); color:black; width:100%; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer; border:none;">ENVIAR A WHATSAPP</button>
+        <h4 id="mTotalText" style="text-align:center; margin:15px 0;">Total: $0</h4>
+        <button onclick="enviarPedido()" class="btn-mos" style="padding:15px;">ENVIAR A WHATSAPP</button>
     </div>
 </div>
 
@@ -145,19 +114,14 @@ async function cargar() {
                 <img src="${imgURL}">
                 <p><b>${p.Nombre}</b></p>
                 <p>$${p.Precio}</p>
-                <button onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
-                <button onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
+                <button class="btn-mos" onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
+                <button class="btn-mos" onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
             `;
             cont.appendChild(div);
         });
     } catch (e) {
-        document.getElementById("catalogo").innerHTML = "Error cargando productos.";
+        document.getElementById("catalogo").innerHTML = "Error cargando productos. Verifica el JSON.";
     }
-}
-
-function preguntar(p) {
-    const msg = `Hola! Tengo una duda sobre: ${p.Nombre} (Ref: ${p.Referencia})`;
-    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function abrirModal(p) {
@@ -165,28 +129,27 @@ function abrirModal(p) {
     document.getElementById("mTitulo").innerText = p.Nombre;
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
-    generarCamposTalla(1);
+    generarTallas(1);
     actualizarPrecio(1);
 }
 
-function generarCamposTalla(cantidad) {
-    const cont = document.getElementById("contenedorTallas");
-    cont.innerHTML = "<p style='font-size:0.9em;'>Elige talla para cada unidad:</p>";
-    
+function generarTallas(cantidad) {
+    const contenedor = document.getElementById("contenedorTallas");
+    contenedor.innerHTML = "<p style='font-size:0.8em; margin:10px 0;'>Elige las tallas:</p>";
     for (let i = 1; i <= cantidad; i++) {
-        const div = document.createElement("div");
-        div.className = "talla-caja";
-        div.innerHTML = `
-            <label>Unidad ${i}:</label>
-            <select class="input-talla">
-                <option value="S">Talla S</option>
-                <option value="M">Talla M</option>
-                <option value="L">Talla L</option>
-                <option value="XL">Talla XL</option>
-                <option value="Única">Talla Única</option>
+        const item = document.createElement("div");
+        item.className = "talla-item";
+        item.innerHTML = `
+            <label>Talla para unidad ${i}:</label>
+            <select class="sel-talla-final">
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="Única">Única</option>
             </select>
         `;
-        cont.appendChild(div);
+        contenedor.appendChild(item);
     }
 }
 
@@ -194,38 +157,43 @@ function actualizarPrecio(c) {
     document.getElementById("mTotalText").innerText = "Total: $" + (c * productoActual.Precio);
 }
 
-document.getElementById("mCant").addEventListener("input", (e) => {
-    let valor = parseInt(e.target.value);
-    if(isNaN(valor) || valor < 1) valor = 1;
-    generarCamposTalla(valor);
-    actualizarPrecio(valor);
-});
+document.getElementById("mCant").oninput = (e) => {
+    let c = parseInt(e.target.value);
+    if(isNaN(c) || c < 1) c = 1;
+    generarTallas(c);
+    actualizarPrecio(c);
+};
 
-document.getElementById("btnFinal").onclick = function() {
+function enviarPedido() {
     const nom = document.getElementById("mNombre").value;
     const dir = document.getElementById("mDireccion").value;
     const cant = document.getElementById("mCant").value;
+    const selects = document.querySelectorAll(".sel-talla-final");
     
-    const selects = document.querySelectorAll(".input-talla");
-    let tallasElegidas = [];
-    selects.forEach((s, i) => tallasElegidas.push(`Unid ${i+1}: ${s.value}`));
+    let tallas = [];
+    selects.forEach((s, i) => tallas.push(`Unid ${i+1}: ${s.value}`));
 
     if(!nom || !dir) {
-        alert("Por favor rellena tu nombre y dirección.");
+        alert("Por favor completa nombre y dirección.");
         return;
     }
 
-    const textoFinal = `🧾 *NUEVO PEDIDO - MOS STORE*\n\n` +
-                       `*Producto:* ${productoActual.Nombre}\n` +
-                       `*Ref:* ${productoActual.Referencia}\n` +
-                       `*Cantidad:* ${cant}\n` +
-                       `*Tallas:* \n- ${tallasElegidas.join('\n- ')}\n\n` +
-                       `*Total:* $${cant * productoActual.Precio}\n\n` +
-                       `*Cliente:* ${nom}\n` +
-                       `*Dirección:* ${dir}`;
+    const texto = `🧾 *NUEVO PEDIDO MANGUELITO*\n\n` +
+                  `*Producto:* ${productoActual.Nombre}\n` +
+                  `*Referencia:* ${productoActual.Referencia}\n` +
+                  `*Cantidad:* ${cant}\n` +
+                  `*Tallas:* \n- ${tallas.join('\n- ')}\n\n` +
+                  `*Total:* $${cant * productoActual.Precio}\n\n` +
+                  `*Cliente:* ${nom}\n` +
+                  `*Dirección:* ${dir}`;
     
-    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(textoFinal)}`, '_blank');
-};
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`, '_blank');
+}
+
+function preguntar(p) {
+    const msg = `Hola! Me gustaría preguntar por: ${p.Nombre}`;
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
 function cerrar() { document.getElementById("modalCompra").style.display = "none"; }
 window.onclick = (e) => { if (e.target == document.getElementById("modalCompra")) cerrar(); };
