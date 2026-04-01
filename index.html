@@ -52,14 +52,24 @@ header {
 
 .producto:hover img {
   transform: scale(2);
-  z-index: 10;
 }
 
+/* 🔥 BOTONES MEJORADOS */
 button {
   margin-top: 5px;
+  background: linear-gradient(135deg, #FFD54F, #FFB300);
+  color: black;
+  border: none;
   padding: 6px;
-  width: 100%;
   cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: black;
+  color: #FFD54F;
 }
 
 .modal {
@@ -95,7 +105,7 @@ input, select {
 
 <div id="modalCompra" class="modal">
   <div class="modal-content">
-    <span onclick="cerrarModal()">✖</span>
+    <span onclick="cerrarModal()" style="cursor:pointer;">✖</span>
     <div id="formCompra"></div>
   </div>
 </div>
@@ -103,11 +113,14 @@ input, select {
 <script>
 const urlJSON = "https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json";
 const numero = "573106588480";
-const scriptURL = "TU_URL_GOOGLE_SCRIPT"; // 🔥 pega aquí tu URL
+
+let productosGlobal = [];
 
 async function cargarProductos() {
   const res = await fetch(urlJSON);
   const data = await res.json();
+  productosGlobal = data;
+
   const contenedor = document.getElementById("catalogo");
 
   const categorias = [...new Set(data.map(p => p["Categoría"]))];
@@ -117,35 +130,41 @@ async function cargarProductos() {
     div.innerHTML = `<h2>${cat}</h2><div class="grid"></div>`;
     const grid = div.querySelector(".grid");
 
-    data.filter(p => p["Categoría"] === cat).forEach(prod => {
+    data
+      .map((prod, index) => ({ prod, index }))
+      .filter(obj => obj.prod["Categoría"] === cat)
+      .forEach(obj => {
 
-      let categoriaReal = prod["Categoría"];
-      if (categoriaReal === "Monederos" || categoriaReal === "Tarjeteros") {
-        categoriaReal = "Billeteras";
-      }
+        const prod = obj.prod;
+        const index = obj.index;
 
-      let referencia = prod["Referencia"];
-      if (!referencia.includes(".")) referencia += ".png";
+        let categoriaReal = prod["Categoría"];
+        if (categoriaReal === "Monederos" || categoriaReal === "Tarjeteros") {
+          categoriaReal = "Billeteras";
+        }
 
-      const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${categoriaReal}/${referencia}`;
+        let referencia = prod["Referencia"];
+        if (!referencia.includes(".")) referencia += ".png";
 
-      const el = document.createElement("div");
-      el.className = "producto";
+        const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${categoriaReal}/${referencia}`;
 
-      el.innerHTML = `
-        <img src="${imgURL}">
-        <p><b>${prod["Nombre"]}</b></p>
-        <p>$${prod["Precio"]}</p>
+        const el = document.createElement("div");
+        el.className = "producto";
 
-        <button onclick="abrirCompra(this)" data-prod='${JSON.stringify(prod)}'>Comprar</button>
+        el.innerHTML = `
+          <img src="${imgURL}">
+          <p><b>${prod["Nombre"]}</b></p>
+          <p>$${prod["Precio"]}</p>
 
-        <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
-          Preguntar
-        </button>
-      `;
+          <button onclick="abrirCompra(${index})">Comprar</button>
 
-      grid.appendChild(el);
-    });
+          <button onclick="preguntar('${prod["Referencia"]}','${prod["Nombre"]}','${prod["Precio"]}')">
+            Preguntar
+          </button>
+        `;
+
+        grid.appendChild(el);
+      });
 
     contenedor.appendChild(div);
   });
@@ -158,8 +177,8 @@ function preguntar(ref, nombre, precio) {
 }
 
 /* MODAL */
-function abrirCompra(btn) {
-  const prod = JSON.parse(btn.dataset.prod);
+function abrirCompra(index) {
+  const prod = productosGlobal[index];
 
   document.getElementById("modalCompra").style.display = "block";
 
@@ -169,7 +188,9 @@ function abrirCompra(btn) {
     <input id="nombre" placeholder="Nombre completo">
     <input id="whatsapp" placeholder="WhatsApp">
 
-    <input id="cantidad" type="number" value="1" min="1" onchange="actualizarTotal(${prod["Precio"]}, '${prod["Talla"]}')">
+    <label>Cantidad</label>
+    <input id="cantidad" type="number" value="1" min="1"
+      onchange="actualizarTotal(${prod["Precio"]}, '${prod["Talla"]}')">
 
     <p id="total">Total: $${prod["Precio"]}</p>
 
@@ -183,27 +204,29 @@ function abrirCompra(btn) {
 
     <div id="direccionExtra"></div>
 
-    <label><input type="checkbox" id="datos"> Acepto datos</label>
+    <label>
+      <input type="checkbox" id="datos"> Acepto el tratamiento de datos
+    </label>
 
-    <button onclick='enviarPedido(${JSON.stringify(prod)})'>Enviar pedido</button>
-
-    <button onclick="pagar()">Pagar con Nequi</button>
+    <button onclick="enviarPedido(${index})">Enviar pedido</button>
   `;
 
   actualizarTotal(prod["Precio"], prod["Talla"]);
 }
 
-/* TOTAL */
+/* TOTAL + TALLAS */
 function actualizarTotal(precio, usaTalla) {
   const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
   document.getElementById("total").innerText = "Total: $" + (precio * cantidad);
 
   if (usaTalla === "Sí") {
-    let html = "";
+    let html = "<label>Tallas:</label>";
     ["XS","S","M","L","XL","XXL"].forEach(t => {
       html += `${t}: <input type="number" id="talla_${t}" min="0" value="0"><br>`;
     });
     document.getElementById("tallasContainer").innerHTML = html;
+  } else {
+    document.getElementById("tallasContainer").innerHTML = "";
   }
 }
 
@@ -213,63 +236,65 @@ function cambiarDireccion() {
   const div = document.getElementById("direccionExtra");
 
   if (tipo === "urbana") {
-    div.innerHTML = `<input id="direccion" placeholder="Dirección">`;
+    div.innerHTML = `<input id="direccion" placeholder="Dirección completa">`;
   } else {
     div.innerHTML = `<input id="direccion" placeholder="Municipio / Vereda / Referencia">`;
   }
 }
 
 /* PEDIDO */
-function enviarPedido(prod) {
+function enviarPedido(index) {
+  const prod = productosGlobal[index];
 
   if (!document.getElementById("datos").checked) {
-    alert("Debes aceptar datos");
+    alert("Debes aceptar los datos");
     return;
   }
 
   const nombre = document.getElementById("nombre").value;
   const whatsapp = document.getElementById("whatsapp").value;
-  const cantidad = parseInt(document.getElementById("cantidad").value);
+  const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
   const total = cantidad * prod["Precio"];
   const fecha = new Date().toLocaleString();
   const orden = Date.now();
   const direccion = document.getElementById("direccion")?.value || "";
 
-  // 🔥 GUARDAR EN SHEETS
-  fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({
-      fecha,nombre,whatsapp,
-      producto: prod["Nombre"],
-      referencia: prod["Referencia"],
-      cantidad,total,direccion
-    })
-  });
+  let tallasTexto = "";
+  if (prod["Talla"] === "Sí") {
+    let suma = 0;
+    ["XS","S","M","L","XL","XXL"].forEach(t => {
+      const v = parseInt(document.getElementById("talla_"+t)?.value) || 0;
+      if (v > 0) {
+        tallasTexto += `${t}: ${v}\n`;
+        suma += v;
+      }
+    });
+    if (suma !== cantidad) {
+      alert("Las tallas deben coincidir con la cantidad");
+      return;
+    }
+  }
 
-  // 🔥 WHATSAPP
   const msg = `
 🧾 Orden #${orden}
 
-${fecha}
+📅 ${fecha}
 
-${nombre}
-${whatsapp}
+👤 ${nombre}
+📱 ${whatsapp}
 
-${prod["Nombre"]}
-Ref: ${prod["Referencia"]}
+📦 ${prod["Nombre"]}
+🔖 ${prod["Referencia"]}
 
 Cantidad: ${cantidad}
-Total: $${total}
+${tallasTexto}
 
-Dirección: ${direccion}
+💰 Total: $${total}
+
+📍 ${direccion}
   `;
 
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`);
-}
-
-/* PAGO */
-function pagar() {
-  window.open("TU_LINK_QR_AQUI");
 }
 
 function cerrarModal() {
