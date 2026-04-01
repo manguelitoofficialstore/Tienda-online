@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOS Store - Manguelito</title>
+    <title>MOS Store - Manguelito Official</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -11,28 +11,58 @@
             background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg') no-repeat center center fixed;
             background-size: cover;
         }
-        header { background: rgba(255,255,255,0.9); padding: 15px; text-align: center; }
-        .container { padding: 20px; max-width: 1100px; margin: 20px auto; background: rgba(255,255,255,0.8); border-radius: 15px; }
-        .grid { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; padding: 50px 0; }
+        header { background: rgba(255,255,255,0.9); padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        .container { padding: 20px; max-width: 1200px; margin: 20px auto; background: rgba(255,255,255,0.85); border-radius: 15px; }
+        
+        /* Títulos de Categorías */
+        .categoria-titulo {
+            width: 100%;
+            border-bottom: 3px solid #FFD54F;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            color: #333;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
 
-        /* --- ZOOM AL DOBLE --- */
+        /* Cuadrícula de productos (Uno al lado del otro) */
+        .grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 25px; 
+            justify-content: center; 
+            padding-bottom: 50px;
+        }
+
+        /* Tarjeta de Producto */
         .producto { 
-            background: white; padding: 15px; border-radius: 12px; width: 160px; 
-            text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; overflow: visible; /* Importante para que no se corte el zoom */
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            width: 180px; /* Ancho fijo para mantener la simetría */
+            text-align: center; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative; 
+            overflow: visible; 
         }
+
+        /* ZOOM AL DOBLE */
         .producto img { 
-            width: 100%; height: 130px; object-fit: contain; 
+            width: 100%; 
+            height: 140px; 
+            object-fit: contain; 
             transition: transform 0.3s ease-in-out; 
-            cursor: pointer; position: relative; z-index: 10;
+            cursor: pointer; 
+            position: relative; 
+            z-index: 10;
         }
-        /* Forzamos el zoom al doble (200%) */
         .producto:hover img { 
             transform: scale(2) !important; 
             z-index: 999 !important; 
         }
 
-        /* --- BOTONES CON HOVER --- */
+        /* BOTONES AMARILLOS */
         .btn-mos {
             margin-top: 8px; border: none; padding: 10px; cursor: pointer; 
             width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s;
@@ -42,7 +72,7 @@
             background: #000 !important; color: #FFD54F !important;
         }
 
-        /* --- MODAL --- */
+        /* MODAL */
         .modal { 
             display: none; position: fixed; z-index: 10000; 
             left: 0; top: 0; width: 100%; height: 100%; 
@@ -50,14 +80,14 @@
         }
         .modal-content { 
             background: #000; color: #FFD54F; 
-            margin: 5% auto; padding: 25px; width: 90%; max-width: 380px; 
+            margin: 5% auto; padding: 25px; width: 90%; max-width: 400px; 
             border-radius: 15px; border: 2px solid #FFD54F;
-            max-height: 85vh; overflow-y: auto; position: relative;
+            max-height: 85vh; overflow-y: auto;
         }
         .modal-content input, .modal-content select { 
             width: 100%; margin: 10px 0; padding: 12px; border-radius: 5px; 
             border: 1px solid #FFD54F; background: #1a1a1a; color: white;
-            box-sizing: border-box; display: block;
+            box-sizing: border-box;
         }
         .talla-item { border: 1px dashed #FFD54F; padding: 10px; margin: 10px 0; border-radius: 8px; }
     </style>
@@ -69,24 +99,24 @@
 </header>
 
 <div class="container" id="catalogo">
-    <h3 style="text-align:center;">Cargando catálogo...</h3>
+    <h3 style="text-align:center;">Cargando catálogo oficial...</h3>
 </div>
 
 <div id="modalCompra" class="modal">
     <div class="modal-content">
-        <span onclick="cerrar()" style="float:right; cursor:pointer; color:white; font-size:25px;">&times;</span>
-        <h3 id="mTitulo">Finalizar Compra</h3>
+        <span onclick="cerrar()" style="float:right; cursor:pointer; color:white; font-size:30px;">&times;</span>
+        <h3 id="mTitulo" style="margin-top:0;">Producto</h3>
         
         <input type="text" id="mNombre" placeholder="Tu nombre completo">
-        <input type="text" id="mDireccion" placeholder="Dirección de envío">
+        <input type="text" id="mDireccion" placeholder="Dirección y Ciudad">
         
-        <label>¿Cuántas unidades quieres?</label>
+        <label>Cantidad de unidades:</label>
         <input type="number" id="mCant" value="1" min="1">
         
         <div id="contenedorTallas"></div>
 
-        <h4 id="mTotalText" style="text-align:center; margin:15px 0;">Total: $0</h4>
-        <button onclick="enviarPedido()" class="btn-mos" style="padding:15px;">ENVIAR A WHATSAPP</button>
+        <h4 id="mTotalText" style="text-align:center; margin:20px 0;">Total: $0</h4>
+        <button onclick="enviarPedido()" class="btn-mos" style="padding:15px; font-size:1.1em;">ENVIAR A WHATSAPP</button>
     </div>
 </div>
 
@@ -98,32 +128,52 @@ async function cargar() {
     try {
         const res = await fetch("https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json");
         const data = await res.json();
-        const cont = document.getElementById("catalogo");
-        cont.innerHTML = "";
+        const contPrincipal = document.getElementById("catalogo");
+        contPrincipal.innerHTML = "";
 
-        data.forEach(p => {
-            let carpeta = p["Categoría"];
-            if (carpeta === "Monederos" || carpeta === "Tarjeteros") carpeta = "Billeteras";
-            let ref = p["Referencia"];
-            if (!ref.includes(".")) ref += ".png";
-            const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${carpeta}/${ref}`;
+        // 1. Obtener categorías únicas
+        const categorias = [...new Set(data.map(p => p["Categoría"]))];
 
-            const div = document.createElement("div");
-            div.className = "producto";
-            div.innerHTML = `
-                <img src="${imgURL}">
-                <p><b>${p.Nombre}</b></p>
-                <p>$${p.Precio}</p>
-                <button class="btn-mos" onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
-                <button class="btn-mos" onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
-            `;
-            cont.appendChild(div);
+        // 2. Crear secciones por categoría
+        categorias.forEach(cat => {
+            const seccion = document.createElement("div");
+            seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
+            
+            const grid = document.createElement("div");
+            grid.className = "grid";
+
+            // 3. Filtrar y mostrar productos de esta categoría
+            data.filter(p => p["Categoría"] === cat).forEach(p => {
+                let carpeta = p["Categoría"];
+                if (carpeta === "Monederos" || carpeta === "Tarjeteros") carpeta = "Billeteras";
+                let ref = p["Referencia"];
+                if (!ref.includes(".")) ref += ".png";
+                
+                const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${carpeta}/${ref}`;
+
+                const card = document.createElement("div");
+                card.className = "producto";
+                card.innerHTML = `
+                    <img src="${imgURL}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
+                    <p style="height:40px; overflow:hidden;"><b>${p.Nombre}</b></p>
+                    <p style="color:#555;">$${p.Precio}</p>
+                    <button class="btn-mos" onclick='abrirModal(${JSON.stringify(p)})'>Comprar</button>
+                    <button class="btn-mos" onclick='preguntar(${JSON.stringify(p)})'>Preguntar</button>
+                `;
+                grid.appendChild(card);
+            });
+
+            seccion.appendChild(grid);
+            contPrincipal.appendChild(seccion);
         });
+
     } catch (e) {
-        document.getElementById("catalogo").innerHTML = "Error cargando productos. Verifica el JSON.";
+        document.getElementById("catalogo").innerHTML = "Error al cargar la tienda. Por favor refresca la página.";
+        console.error(e);
     }
 }
 
+// Lógica del Modal
 function abrirModal(p) {
     productoActual = p;
     document.getElementById("mTitulo").innerText = p.Nombre;
@@ -133,23 +183,23 @@ function abrirModal(p) {
     actualizarPrecio(1);
 }
 
-function generarTallas(cantidad) {
-    const contenedor = document.getElementById("contenedorTallas");
-    contenedor.innerHTML = "<p style='font-size:0.8em; margin:10px 0;'>Elige las tallas:</p>";
-    for (let i = 1; i <= cantidad; i++) {
-        const item = document.createElement("div");
-        item.className = "talla-item";
-        item.innerHTML = `
-            <label>Talla para unidad ${i}:</label>
+function generarTallas(cant) {
+    const cont = document.getElementById("contenedorTallas");
+    cont.innerHTML = "<p style='font-size:0.85em; margin-bottom:5px;'>Elige tallas:</p>";
+    for (let i = 1; i <= cant; i++) {
+        const div = document.createElement("div");
+        div.className = "talla-item";
+        div.innerHTML = `
+            <label style="font-size:0.75em">Unidad ${i}:</label>
             <select class="sel-talla-final">
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="Única">Única</option>
+                <option value="S">Talla S</option>
+                <option value="M">Talla M</option>
+                <option value="L">Talla L</option>
+                <option value="XL">Talla XL</option>
+                <option value="Única">Talla Única</option>
             </select>
         `;
-        contenedor.appendChild(item);
+        cont.appendChild(div);
     }
 }
 
@@ -174,11 +224,11 @@ function enviarPedido() {
     selects.forEach((s, i) => tallas.push(`Unid ${i+1}: ${s.value}`));
 
     if(!nom || !dir) {
-        alert("Por favor completa nombre y dirección.");
+        alert("¡Falta tu nombre o dirección!");
         return;
     }
 
-    const texto = `🧾 *NUEVO PEDIDO MANGUELITO*\n\n` +
+    const texto = `🧾 *ORDEN DE PEDIDO - MANGUELITO*\n\n` +
                   `*Producto:* ${productoActual.Nombre}\n` +
                   `*Referencia:* ${productoActual.Referencia}\n` +
                   `*Cantidad:* ${cant}\n` +
@@ -191,7 +241,7 @@ function enviarPedido() {
 }
 
 function preguntar(p) {
-    const msg = `Hola! Me gustaría preguntar por: ${p.Nombre}`;
+    const msg = `Hola! Me interesa este producto: ${p.Nombre}`;
     window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
