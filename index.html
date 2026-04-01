@@ -23,18 +23,32 @@ header {
   text-align: center;
 }
 
-/* CONTENEDOR */
+/* CONTENEDOR GENERAL */
 .container {
   padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
   background: rgba(255,255,255,0.85);
   margin: 20px;
   border-radius: 15px;
 }
 
-/* PRODUCTOS */
+/* CATEGORIA */
+.categoria {
+  margin-bottom: 30px;
+}
+
+.categoria h2 {
+  margin-left: 10px;
+}
+
+/* GRID PRODUCTOS */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* PRODUCTO */
 .producto {
   background: #fafafa;
   padding: 10px;
@@ -120,40 +134,59 @@ const usuario = "manguelitoofficialstore";
 const repo = "Tienda-online";
 
 const carpetas = [
-  "Gorras",
+  
   "Camisetas",
+  "Pulseras",
+  "Tulas",
   "Billeteras",
   "Llaveros",
-  "Pulseras",
   "Relojes",
-  "Tulas"
+  "Gorras"
 ];
 
 const contenedor = document.getElementById("catalogo");
 
 async function cargarImagenes() {
+  contenedor.innerHTML = "";
+
   for (let carpeta of carpetas) {
     try {
       const url = `https://api.github.com/repos/${usuario}/${repo}/contents/${carpeta}?t=${new Date().getTime()}`;
       const res = await fetch(url);
       const data = await res.json();
 
+      if (!Array.isArray(data) || data.length === 0) continue;
+
+      // 👉 CREAR BLOQUE DE CATEGORIA
+      const categoriaDiv = document.createElement("div");
+      categoriaDiv.className = "categoria";
+
+      const titulo = document.createElement("h2");
+      titulo.innerText = carpeta;
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
       data.forEach(file => {
         if (file.download_url) {
 
-          const div = document.createElement("div");
-          div.className = "producto";
+          const producto = document.createElement("div");
+          producto.className = "producto";
 
-          div.innerHTML = `
+          producto.innerHTML = `
             <img src="${file.download_url}">
             <p>${file.name}</p>
             <button onclick="comprar('${file.name}')">Comprar</button>
             <button onclick="verDetalles('${file.name}','${file.download_url}')">Detalles</button>
           `;
 
-          contenedor.appendChild(div);
+          grid.appendChild(producto);
         }
       });
+
+      categoriaDiv.appendChild(titulo);
+      categoriaDiv.appendChild(grid);
+      contenedor.appendChild(categoriaDiv);
 
     } catch (error) {
       console.log("Error en:", carpeta);
@@ -163,7 +196,7 @@ async function cargarImagenes() {
 
 /* WHATSAPP */
 function comprar(producto) {
-  const numero = "573001234567"; // 👈 CAMBIA ESTO
+  const numero = "573001234567";
   const mensaje = "Hola, quiero comprar: " + producto;
   window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje));
 }
