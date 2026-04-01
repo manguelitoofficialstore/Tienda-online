@@ -134,16 +134,68 @@
             margin: 10px 0;
             border-radius: 8px;
         }
+
+        .footer-mos {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            padding: 35px 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.88);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-top: 4px solid #FFD54F;
+        }
+
+        .footer-mos-logo {
+            width: 180px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .footer-mos-frase {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .footer-mos {
+                margin: 0 15px 25px 15px;
+                padding: 25px 15px;
+            }
+
+            .footer-mos-logo {
+                width: 140px;
+            }
+
+            .footer-mos-frase {
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Último_logo_completo_2.png" width="400" alt="MOS Store">
+    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="400" alt="MOS Store">
 </header>
 
 <div class="container" id="catalogo">
     <h3 style="text-align:center;">Cargando catálogo...</h3>
+</div>
+
+<div class="footer-mos">
+    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_positivo.png" 
+         alt="Logo Manguelito" 
+         class="footer-mos-logo">
+
+    <p class="footer-mos-frase">
+        No te quedes sin pertenecer a la ola,<br>
+        ¡Manguelito está de moda!
+    </p>
 </div>
 
 <div id="modalCompra" class="modal">
