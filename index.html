@@ -45,6 +45,7 @@
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 30px;
             padding-bottom: 50px;
+            align-items: start;
         }
 
         .producto {
@@ -55,6 +56,10 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             position: relative;
             overflow: visible;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 340px;
         }
 
         .producto img {
@@ -65,11 +70,29 @@
             cursor: pointer;
             position: relative;
             z-index: 10;
+            background: #fff;
+            border-radius: 8px;
         }
 
         .producto:hover img {
-            transform: scale(2) !important;
+            transform: scale(1.6) !important;
             z-index: 999 !important;
+        }
+
+        .producto-nombre {
+            margin: 12px 0 8px 0;
+            font-weight: 700;
+            color: #000;
+            line-height: 1.35;
+            white-space: normal;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            min-height: 58px;
+        }
+
+        .producto-precio {
+            color: #555;
+            margin: 0 0 8px 0;
         }
 
         .btn-mos {
@@ -91,6 +114,13 @@
             color: #FFD54F !important;
         }
 
+        .btn-mos:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background: #bdbdbd !important;
+            color: #333 !important;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -109,7 +139,7 @@
             margin: 5% auto;
             padding: 25px;
             width: 90%;
-            max-width: 400px;
+            max-width: 430px;
             border-radius: 15px;
             border: 2px solid #FFD54F;
             max-height: 85vh;
@@ -133,6 +163,38 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 8px;
+        }
+
+        .consent-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 16px 0 6px 0;
+            padding: 12px;
+            border: 1px solid #FFD54F;
+            border-radius: 8px;
+            background: rgba(255, 213, 79, 0.08);
+        }
+
+        .consent-box input[type="checkbox"] {
+            width: auto;
+            margin: 3px 0 0 0;
+            padding: 0;
+            accent-color: #FFD54F;
+            flex-shrink: 0;
+        }
+
+        .consent-text {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: #fff;
+        }
+
+        .consent-error {
+            color: #ff8a80;
+            font-size: 0.82rem;
+            margin: 6px 0 0 0;
+            display: none;
         }
 
         .footer-mos {
@@ -161,17 +223,6 @@
             line-height: 1.5;
         }
 
-        .categoria-vacia {
-            background: rgba(255,255,255,0.7);
-            border: 1px dashed #999;
-            color: #555;
-            text-align: center;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 40px;
-            font-weight: 500;
-        }
-
         @media (max-width: 768px) {
             .footer-mos {
                 margin: 0 15px 25px 15px;
@@ -184,6 +235,14 @@
 
             .footer-mos-frase {
                 font-size: 1.1rem;
+            }
+
+            .producto {
+                min-height: auto;
+            }
+
+            .producto-nombre {
+                min-height: auto;
             }
         }
     </style>
@@ -222,8 +281,20 @@
         
         <div id="contenedorTallas" style="display:none;"></div>
 
+        <div class="consent-box">
+            <input type="checkbox" id="mAceptaDatos">
+            <label for="mAceptaDatos" class="consent-text">
+                Autorizo el tratamiento de mis datos personales para gestionar este pedido y el contacto relacionado con la compra.
+            </label>
+        </div>
+        <div id="mConsentError" class="consent-error">
+            Debes aceptar el tratamiento de datos para poder enviar la solicitud.
+        </div>
+
         <h4 id="mTotalText" style="text-align:center; margin:20px 0;">Total: $0</h4>
-        <button onclick="enviarPedido()" class="btn-mos" style="padding:15px; font-size:1.1em;">ENVIAR A WHATSAPP</button>
+        <button id="btnEnviarPedido" onclick="enviarPedido()" class="btn-mos" style="padding:15px; font-size:1.1em;" disabled>
+            ENVIAR A WHATSAPP
+        </button>
     </div>
 </div>
 
@@ -231,30 +302,85 @@
 const numeroWA = "573106588480";
 let productoActual = null;
 
+const GITHUB = {
+    owner: "manguelitoofficialstore",
+    repo: "Tienda-online",
+    branch: "main"
+};
+
+const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB.owner}/${GITHUB.repo}/${GITHUB.branch}`;
+const API_BASE = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents`;
+
+const PRIORIDAD_CATEGORIAS = ["Camisetas", "Camisas", "Blazers"];
+const EXCLUIR_CARPETAS = [".github"];
+
+const ALIAS_CATEGORIAS = {
+    "monedero": "billetera",
+    "monederos": "billetera",
+    "tarjetero": "billetera",
+    "tarjeteros": "billetera"
+};
+
+function quitarAcentos(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function claveCategoria(nombre) {
+    let s = quitarAcentos(String(nombre || "").trim().toLowerCase())
+        .replace(/\s+/g, " ");
+
+    s = ALIAS_CATEGORIAS[s] || s;
+
+    if (s.endsWith("s")) {
+        s = s.slice(0, -1);
+    }
+
+    return s;
+}
+
 function requiereTalla(p) {
     if (!p || p.Talla == null) return false;
     const valor = String(p.Talla).trim().toLowerCase();
     return valor === "sí" || valor === "si";
 }
 
-function construirOrdenCategorias(categoriasOriginales) {
-    let categorias = [...categoriasOriginales];
+async function obtenerCarpetasImagenes() {
+    const res = await fetch(API_BASE);
 
-    categorias = categorias.filter(cat => cat !== "Camisas" && cat !== "Blazers");
-
-    const idxCamisetas = categorias.indexOf("Camisetas");
-
-    if (idxCamisetas !== -1) {
-        categorias.splice(idxCamisetas + 1, 0, "Camisas", "Blazers");
-    } else {
-        categorias.push("Camisas", "Blazers");
+    if (!res.ok) {
+        throw new Error(`No se pudieron listar las carpetas del repositorio. HTTP ${res.status}`);
     }
 
-    return categorias;
+    const items = await res.json();
+
+    return items
+        .filter(item => item.type === "dir")
+        .map(item => item.name)
+        .filter(nombre => !EXCLUIR_CARPETAS.includes(nombre));
+}
+
+function construirMapaCarpetas(carpetas) {
+    const mapa = new Map();
+
+    carpetas.forEach(nombreReal => {
+        mapa.set(claveCategoria(nombreReal), nombreReal);
+    });
+
+    return mapa;
+}
+
+function ordenarCategorias(carpetas) {
+    const prioridad = PRIORIDAD_CATEGORIAS.filter(cat => carpetas.includes(cat));
+    const resto = carpetas
+        .filter(cat => !PRIORIDAD_CATEGORIAS.includes(cat))
+        .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+
+    return [...prioridad, ...resto];
 }
 
 function construirURLImagen(carpeta, referencia) {
-    const carpetaSegura = encodeURIComponent(String(carpeta || "").trim());
     let ref = String(referencia || "").trim();
 
     if (!ref) {
@@ -265,70 +391,86 @@ function construirURLImagen(carpeta, referencia) {
         ref += ".png";
     }
 
-    const refSegura = encodeURIComponent(ref);
-    return `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${carpetaSegura}/${refSegura}`;
+    return `${RAW_BASE}/${encodeURIComponent(carpeta)}/${encodeURIComponent(ref)}`;
+}
+
+function actualizarEstadoBotonEnvio() {
+    const acepta = document.getElementById("mAceptaDatos").checked;
+    const btn = document.getElementById("btnEnviarPedido");
+    const error = document.getElementById("mConsentError");
+
+    btn.disabled = !acepta;
+
+    if (acepta) {
+        error.style.display = "none";
+    }
 }
 
 async function cargar() {
     try {
-        const res = await fetch("https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json");
+        const [resProductos, carpetasRepo] = await Promise.all([
+            fetch(`${RAW_BASE}/productos.json`),
+            obtenerCarpetasImagenes()
+        ]);
 
-        if (!res.ok) {
-            throw new Error(`Error HTTP ${res.status}`);
+        if (!resProductos.ok) {
+            throw new Error(`No se pudo cargar productos.json. HTTP ${resProductos.status}`);
         }
 
-        const data = await res.json();
+        const data = await resProductos.json();
 
         if (!Array.isArray(data)) {
-            throw new Error("El archivo productos.json no contiene un arreglo válido.");
+            throw new Error("productos.json no contiene un arreglo válido.");
         }
 
         const contPrincipal = document.getElementById("catalogo");
         contPrincipal.innerHTML = "";
 
-        let categorias = [...new Set(
-            data
-                .map(p => String(p["Categoría"] ?? "").trim())
-                .filter(Boolean)
-        )];
+        const mapaCarpetas = construirMapaCarpetas(carpetasRepo);
 
-        categorias = construirOrdenCategorias(categorias);
+        const productos = data.map(p => {
+            const categoriaOriginal = String(p["Categoría"] || "").trim();
+            const carpetaReal = mapaCarpetas.get(claveCategoria(categoriaOriginal)) || null;
+
+            return {
+                ...p,
+                _carpetaReal: carpetaReal
+            };
+        });
+
+        productos
+            .filter(p => !p._carpetaReal)
+            .forEach(p => {
+                console.warn(
+                    "No se encontró carpeta para esta categoría:",
+                    p["Categoría"],
+                    "| Producto:",
+                    p["Nombre"]
+                );
+            });
+
+        const categorias = ordenarCategorias(carpetasRepo);
 
         categorias.forEach(cat => {
-            const productosCategoria = data.filter(
-                p => String(p["Categoría"] ?? "").trim() === cat
-            );
+            const productosCategoria = productos.filter(p => p._carpetaReal === cat);
+
+            if (productosCategoria.length === 0) return;
 
             const seccion = document.createElement("div");
             seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
-
-            if (productosCategoria.length === 0) {
-                const vacio = document.createElement("div");
-                vacio.className = "categoria-vacia";
-                vacio.textContent = "Próximamente productos en esta categoría.";
-                seccion.appendChild(vacio);
-                contPrincipal.appendChild(seccion);
-                return;
-            }
 
             const grid = document.createElement("div");
             grid.className = "grid";
 
             productosCategoria.forEach(p => {
-                let carpeta = String(p["Categoría"] ?? "").trim();
-
-                if (carpeta === "Monederos" || carpeta === "Tarjeteros") {
-                    carpeta = "Billeteras";
-                }
-
-                const imgURL = construirURLImagen(carpeta, p["Referencia"]);
+                const imgURL = construirURLImagen(cat, p["Referencia"]);
 
                 const card = document.createElement("div");
                 card.className = "producto";
                 card.innerHTML = `
-                    <img src="${imgURL}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
-                    <p style="height:40px; overflow:hidden; margin:10px 0;"><b>${p.Nombre ?? ""}</b></p>
-                    <p style="color:#555;">$${p.Precio ?? 0}</p>
+                    <img src="${imgURL}" alt="${p.Nombre || "Producto"}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
+                    <p class="producto-nombre">${p.Nombre || ""}</p>
+                    <p class="producto-precio">$${p.Precio ?? 0}</p>
                     <button class="btn-mos btn-comprar">Comprar</button>
                     <button class="btn-mos btn-preguntar">Preguntar</button>
                 `;
@@ -356,6 +498,9 @@ function abrirModal(p) {
     document.getElementById("mTitulo").innerText = p.Nombre || "Producto";
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
+    document.getElementById("mAceptaDatos").checked = false;
+    document.getElementById("mConsentError").style.display = "none";
+    actualizarEstadoBotonEnvio();
 
     const cont = document.getElementById("contenedorTallas");
 
@@ -415,10 +560,13 @@ document.getElementById("mCant").addEventListener("input", (e) => {
     actualizarPrecio(c);
 });
 
+document.getElementById("mAceptaDatos").addEventListener("change", actualizarEstadoBotonEnvio);
+
 function enviarPedido() {
     const nom = document.getElementById("mNombre").value.trim();
     const dir = document.getElementById("mDireccion").value.trim();
     const cant = parseInt(document.getElementById("mCant").value, 10) || 1;
+    const aceptaDatos = document.getElementById("mAceptaDatos").checked;
 
     if (!productoActual) {
         alert("No hay producto seleccionado.");
@@ -427,6 +575,13 @@ function enviarPedido() {
 
     if (!nom || !dir) {
         alert("Faltan datos de envío.");
+        return;
+    }
+
+    if (!aceptaDatos) {
+        document.getElementById("mConsentError").style.display = "block";
+        document.getElementById("btnEnviarPedido").disabled = true;
+        alert("Debes aceptar el tratamiento de datos para poder enviar la solicitud.");
         return;
     }
 
@@ -453,7 +608,8 @@ function enviarPedido() {
         mensajeTallas +
         `*Total:* $${total}\n\n` +
         `*Cliente:* ${nom}\n` +
-        `*Dirección:* ${dir}`;
+        `*Dirección:* ${dir}\n` +
+        `*Autorización de datos:* Sí`;
 
     window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`, "_blank");
 }
