@@ -233,7 +233,12 @@ async function cargar() {
         const contPrincipal = document.getElementById("catalogo");
         contPrincipal.innerHTML = "";
 
-        const categorias = [...new Set(data.map(p => p["Categoría"]))];
+        // 🔥 AQUÍ ESTÁ EL CAMBIO
+        let categorias = [...new Set(data.map(p => p["Categoría"]))];
+        const extras = ["Camisas", "Blazers"];
+        extras.forEach(cat => {
+            if (!categorias.includes(cat)) categorias.push(cat);
+        });
 
         categorias.forEach(cat => {
             const seccion = document.createElement("div");
@@ -275,6 +280,8 @@ async function cargar() {
         document.getElementById("catalogo").innerHTML = "<h3 style='text-align:center;'>No se pudo cargar el catálogo.</h3>";
     }
 }
+
+// (resto del código sin cambios...)
 
 function abrirModal(p) {
     productoActual = p;
