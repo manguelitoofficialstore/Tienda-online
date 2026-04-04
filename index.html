@@ -161,6 +161,17 @@
             line-height: 1.5;
         }
 
+        .categoria-vacia {
+            background: rgba(255,255,255,0.7);
+            border: 1px dashed #999;
+            color: #555;
+            text-align: center;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
         @media (max-width: 768px) {
             .footer-mos {
                 margin: 0 15px 25px 15px;
@@ -226,42 +237,98 @@ function requiereTalla(p) {
     return valor === "sí" || valor === "si";
 }
 
+function construirOrdenCategorias(categoriasOriginales) {
+    let categorias = [...categoriasOriginales];
+
+    categorias = categorias.filter(cat => cat !== "Camisas" && cat !== "Blazers");
+
+    const idxCamisetas = categorias.indexOf("Camisetas");
+
+    if (idxCamisetas !== -1) {
+        categorias.splice(idxCamisetas + 1, 0, "Camisas", "Blazers");
+    } else {
+        categorias.push("Camisas", "Blazers");
+    }
+
+    return categorias;
+}
+
+function construirURLImagen(carpeta, referencia) {
+    const carpetaSegura = encodeURIComponent(String(carpeta || "").trim());
+    let ref = String(referencia || "").trim();
+
+    if (!ref) {
+        return "https://via.placeholder.com/150?text=MOS+Store";
+    }
+
+    if (!/\.[a-zA-Z0-9]+$/.test(ref)) {
+        ref += ".png";
+    }
+
+    const refSegura = encodeURIComponent(ref);
+    return `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${carpetaSegura}/${refSegura}`;
+}
+
 async function cargar() {
     try {
         const res = await fetch("https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/productos.json");
+
+        if (!res.ok) {
+            throw new Error(`Error HTTP ${res.status}`);
+        }
+
         const data = await res.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("El archivo productos.json no contiene un arreglo válido.");
+        }
+
         const contPrincipal = document.getElementById("catalogo");
         contPrincipal.innerHTML = "";
 
-        // 🔥 AQUÍ ESTÁ EL CAMBIO
-        let categorias = [...new Set(data.map(p => p["Categoría"]))];
-        const extras = ["Camisas", "Blazers"];
-        extras.forEach(cat => {
-            if (!categorias.includes(cat)) categorias.push(cat);
-        });
+        let categorias = [...new Set(
+            data
+                .map(p => String(p["Categoría"] ?? "").trim())
+                .filter(Boolean)
+        )];
+
+        categorias = construirOrdenCategorias(categorias);
 
         categorias.forEach(cat => {
+            const productosCategoria = data.filter(
+                p => String(p["Categoría"] ?? "").trim() === cat
+            );
+
             const seccion = document.createElement("div");
             seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
+
+            if (productosCategoria.length === 0) {
+                const vacio = document.createElement("div");
+                vacio.className = "categoria-vacia";
+                vacio.textContent = "Próximamente productos en esta categoría.";
+                seccion.appendChild(vacio);
+                contPrincipal.appendChild(seccion);
+                return;
+            }
 
             const grid = document.createElement("div");
             grid.className = "grid";
 
-            data.filter(p => p["Categoría"] === cat).forEach(p => {
-                let carpeta = p["Categoría"];
-                if (carpeta === "Monederos" || carpeta === "Tarjeteros") carpeta = "Billeteras";
+            productosCategoria.forEach(p => {
+                let carpeta = String(p["Categoría"] ?? "").trim();
 
-                let ref = p["Referencia"];
-                if (!ref.includes(".")) ref += ".png";
-                
-                const imgURL = `https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/${carpeta}/${ref}`;
+                if (carpeta === "Monederos" || carpeta === "Tarjeteros") {
+                    carpeta = "Billeteras";
+                }
+
+                const imgURL = construirURLImagen(carpeta, p["Referencia"]);
 
                 const card = document.createElement("div");
                 card.className = "producto";
                 card.innerHTML = `
                     <img src="${imgURL}" onerror="this.src='https://via.placeholder.com/150?text=MOS+Store'">
-                    <p style="height:40px; overflow:hidden; margin:10px 0;"><b>${p.Nombre}</b></p>
-                    <p style="color:#555;">$${p.Precio}</p>
+                    <p style="height:40px; overflow:hidden; margin:10px 0;"><b>${p.Nombre ?? ""}</b></p>
+                    <p style="color:#555;">$${p.Precio ?? 0}</p>
                     <button class="btn-mos btn-comprar">Comprar</button>
                     <button class="btn-mos btn-preguntar">Preguntar</button>
                 `;
@@ -275,18 +342,18 @@ async function cargar() {
             seccion.appendChild(grid);
             contPrincipal.appendChild(seccion);
         });
+
     } catch (e) {
-        console.error(e);
-        document.getElementById("catalogo").innerHTML = "<h3 style='text-align:center;'>No se pudo cargar el catálogo.</h3>";
+        console.error("Error al cargar catálogo:", e);
+        document.getElementById("catalogo").innerHTML =
+            "<h3 style='text-align:center;'>No se pudo cargar el catálogo.</h3>";
     }
 }
-
-// (resto del código sin cambios...)
 
 function abrirModal(p) {
     productoActual = p;
 
-    document.getElementById("mTitulo").innerText = p.Nombre;
+    document.getElementById("mTitulo").innerText = p.Nombre || "Producto";
     document.getElementById("modalCompra").style.display = "block";
     document.getElementById("mCant").value = 1;
 
