@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOS Store - Manguelito Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: url('https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/fondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        header {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.85);
+            border-radius: 15px;
+        }
+
+        .categoria-titulo {
+            width: 100%;
+            border-bottom: 4px solid;
+            border-image: linear-gradient(to right, #000000, #FFD54F) 1;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            color: #000;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 30px;
+            padding-bottom: 50px;
+            align-items: stretch;
+        }
+
+        .producto {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .producto img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            background: #fff;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .producto:hover img {
+            transform: scale(1.35) !important;
+            z-index: 999 !important;
+        }
+
+        .producto-nombre {
+            margin: 12px 0 8px 0;
+            font-weight: 700;
+            color: #000;
+            line-height: 1.35;
+            white-space: normal;
+            overflow: visible;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            display: block;
+            flex: 1 1 auto;
+        }
+
+        .producto-precio {
+            color: #555;
+            margin: 0 0 10px 0;
+            flex-shrink: 0;
+        }
+
+        .producto-acciones {
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .btn-mos {
+            margin-top: 8px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+            background: #FFD54F;
+            color: #000;
+            display: block;
+        }
+
+        .btn-mos:hover {
+            background: #000 !important;
+            color: #FFD54F !important;
+        }
+
+        .btn-mos:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background: #bdbdbd !important;
+            color: #333 !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #000;
+            color: #FFD54F;
+            margin: 5% auto;
+            padding: 25px;
+            width: 90%;
+            max-width: 430px;
+            border-radius: 15px;
+            border: 2px solid #FFD54F;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-content input,
+        .modal-content select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #FFD54F;
+            background: #1a1a1a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .talla-item {
+            border: 1px dashed #FFD54F;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .consent-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 16px 0 6px 0;
+            padding: 12px;
+            border: 1px solid #FFD54F;
+            border-radius: 8px;
+            background: rgba(255, 213, 79, 0.08);
+        }
+
+        .consent-box input[type="checkbox"] {
+            width: auto;
+            margin: 3px 0 0 0;
+            padding: 0;
+            accent-color: #FFD54F;
+            flex-shrink: 0;
+        }
+
+        .consent-text {
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: #fff;
+        }
+
+        .consent-error {
+            color: #ff8a80;
+            font-size: 0.82rem;
+            margin: 6px 0 0 0;
+            display: none;
+        }
+
+        .footer-mos {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            padding: 35px 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.88);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-top: 4px solid #FFD54F;
+        }
+
+        .footer-mos-logo {
+            width: 180px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .footer-mos-frase {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .footer-mos {
+                margin: 0 15px 25px 15px;
+                padding: 25px 15px;
+            }
+
+            .footer-mos-logo {
+                width: 140px;
+            }
+
+            .footer-mos-frase {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_B.png" width="400" alt="MOS Store">
+</header>
+
+<div class="container" id="catalogo">
+    <h3 style="text-align:center;">Cargando catálogo...</h3>
+</div>
+
+<div class="footer-mos">
+    <img src="https://raw.githubusercontent.com/manguelitoofficialstore/Tienda-online/main/Logo_positivo.png"
+         alt="Logo Manguelito"
+         class="footer-mos-logo">
+
+    <p class="footer-mos-frase">
+        No te quedes sin pertenecer a la ola,<br>
+        ¡Manguelito está de moda!
+    </p>
+</div>
+
+<div id="modalCompra" class="modal">
+    <div class="modal-content">
+        <span onclick="cerrar()" style="float:right; cursor:pointer; color:white; font-size:30px;">&times;</span>
+        <h3 id="mTitulo" style="margin-top:0;">Producto</h3>
+
+        <input type="text" id="mNombre" placeholder="Tu nombre completo">
+        <input type="text" id="mDireccion" placeholder="Dirección y Ciudad">
+
+        <label>Cantidad:</label>
+        <input type="number" id="mCant" value="1" min="1">
+
+        <div id="contenedorTallas" style="display:none;"></div>
+
+        <div class="consent-box">
+            <input type="checkbox" id="mAceptaDatos">
+            <label for="mAceptaDatos" class="consent-text">
+                Autorizo el tratamiento de mis datos personales para gestionar este pedido y el contacto relacionado con la compra.
+            </label>
+        </div>
+        <div id="mConsentError" class="consent-error">
+            Debes aceptar el tratamiento de datos para poder enviar la solicitud.
+        </div>
+
+        <h4 id="mTotalText" style="text-align:center; margin:20px 0;">Total: $0</h4>
+        <button id="btnEnviarPedido" onclick="enviarPedido()" class="btn-mos" style="padding:15px; font-size:1.1em;" disabled>
+            ENVIAR A WHATSAPP
+        </button>
+    </div>
+</div>
+
+<script>
+const numeroWA = "573106588480";
+let productoActual = null;
+
+const GITHUB = {
+    owner: "manguelitoofficialstore",
+    repo: "Tienda-online",
+    branch: "main"
+};
+
+const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB.owner}/${GITHUB.repo}/${GITHUB.branch}`;
+const API_BASE = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents`;
+const JSON_URL = `${RAW_BASE}/productos.json`;
+
+const PRIORIDAD_CATEGORIAS = ["Camisetas", "Camisas", "Blazers"];
+const EXCLUIR_CARPETAS = [".github"];
+
+const ALIAS_CATEGORIAS = {
+    "monedero": "billetera",
+    "monederos": "billetera",
+    "tarjetero": "billetera",
+    "tarjeteros": "billetera"
+};
+
+function quitarAcentos(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function normalizarTexto(valor) {
+    return quitarAcentos(String(valor || "").trim().toLowerCase()).replace(/\s+/g, " ");
+}
+
+function claveCategoria(nombre) {
+    let s = normalizarTexto(nombre);
+    s = ALIAS_CATEGORIAS[s] || s;
+    if (s.endsWith("s")) s = s.slice(0, -1);
+    return s;
+}
+
+function requiereTalla(p) {
+    if (!p || p.Talla == null) return false;
+    const valor = String(p.Talla).trim().toLowerCase();
+    return valor === "sí" || valor === "si";
+}
+
+async function obtenerCarpetasImagenes() {
+    try {
+        const res = await fetch(API_BASE);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const items = await res.json();
+        return items
+            .filter(item => item.type === "dir")
+            .map(item => item.name)
+            .filter(nombre => !EXCLUIR_CARPETAS.includes(nombre));
+    } catch (err) {
+        console.warn("No se pudieron detectar carpetas desde GitHub API. Se usará respaldo desde el JSON.", err);
+        return [];
+    }
+}
+
+function ordenarCategorias(carpetas) {
+    const prioridad = PRIORIDAD_CATEGORIAS.filter(cat => carpetas.includes(cat));
+    const resto = carpetas
+        .filter(cat => !PRIORIDAD_CATEGORIAS.includes(cat))
+        .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+    return [...prioridad, ...resto];
+}
+
+function variantesExtension(ref) {
+    const base = String(ref || "").trim();
+    if (!base) return [];
+    const lower = base.toLowerCase();
+
+    const variantes = new Set([base]);
+
+    if (!/\.[a-z0-9]+$/i.test(base)) {
+        variantes.add(base + ".png");
+        variantes.add(base + ".jpg");
+        variantes.add(base + ".jpeg");
+    } else {
+        variantes.add(lower);
+        if (lower.endsWith(".jpg")) {
+            variantes.add(base.replace(/\.jpg$/i, ".png"));
+            variantes.add(base.replace(/\.jpg$/i, ".jpeg"));
+        }
+        if (lower.endsWith(".jpeg")) {
+            variantes.add(base.replace(/\.jpeg$/i, ".jpg"));
+            variantes.add(base.replace(/\.jpeg$/i, ".png"));
+        }
+        if (lower.endsWith(".png")) {
+            variantes.add(base.replace(/\.png$/i, ".jpg"));
+            variantes.add(base.replace(/\.png$/i, ".jpeg"));
+        }
+    }
+
+    return Array.from(variantes);
+}
+
+function construirURLImagen(carpeta, referencia) {
+    return `${RAW_BASE}/${encodeURIComponent(carpeta)}/${encodeURIComponent(referencia)}`;
+}
+
+function cargarImagenConFallback(img, carpetasCandidatas, referencia) {
+    const refs = variantesExtension(referencia);
+    const urls = [];
+
+    carpetasCandidatas.forEach(carpeta => {
+        refs.forEach(ref => urls.push(construirURLImagen(carpeta, ref)));
+    });
+
+    let idx = 0;
+
+    function intentarSiguiente() {
+        if (idx >= urls.length) {
+            img.onerror = null;
+            img.src = "https://via.placeholder.com/150?text=MOS+Store";
+            return;
+        }
+        img.src = urls[idx++];
+    }
+
+    img.onerror = intentarSiguiente;
+    intentarSiguiente();
+}
+
+function actualizarEstadoBotonEnvio() {
+    const acepta = document.getElementById("mAceptaDatos").checked;
+    const btn = document.getElementById("btnEnviarPedido");
+    const error = document.getElementById("mConsentError");
+
+    btn.disabled = !acepta;
+    if (acepta) error.style.display = "none";
+}
+
+function construirCategoriasDesdeJSON(productos) {
+    const cats = [...new Set(
+        productos
+            .map(p => String(p.Carpeta || p["Categoría"] || "").trim())
+            .filter(Boolean)
+    )];
+    return ordenarCategorias(cats);
+}
+
+function obtenerCarpetasCandidatas(producto, carpetasRepo) {
+    const exactaCarpeta = String(producto.Carpeta || "").trim();
+    const exactaCategoria = String(producto["Categoría"] || "").trim();
+    const clave = claveCategoria(exactaCarpeta || exactaCategoria);
+
+    const candidatas = [];
+
+    if (exactaCarpeta) candidatas.push(exactaCarpeta);
+    if (exactaCategoria && !candidatas.includes(exactaCategoria)) candidatas.push(exactaCategoria);
+
+    carpetasRepo.forEach(carpeta => {
+        if (claveCategoria(carpeta) === clave && !candidatas.includes(carpeta)) {
+            candidatas.push(carpeta);
+        }
+    });
+
+    return candidatas.filter(Boolean);
+}
+
+async function cargar() {
+    try {
+        const [resProductos, carpetasRepo] = await Promise.all([
+            fetch(JSON_URL),
+            obtenerCarpetasImagenes()
+        ]);
+
+        if (!resProductos.ok) {
+            throw new Error(`No se pudo cargar productos.json. HTTP ${resProductos.status}`);
+        }
+
+        const data = await resProductos.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("productos.json no contiene un arreglo válido.");
+        }
+
+        const contPrincipal = document.getElementById("catalogo");
+        contPrincipal.innerHTML = "";
+
+        const categorias = carpetasRepo.length ? ordenarCategorias(carpetasRepo) : construirCategoriasDesdeJSON(data);
+
+        categorias.forEach(cat => {
+            const productosCategoria = data.filter(p => {
+                const carpetas = obtenerCarpetasCandidatas(p, carpetasRepo);
+                return carpetas.includes(cat) || String(p.Carpeta || p["Categoría"] || "").trim() === cat;
+            });
+
+            if (productosCategoria.length === 0) return;
+
+            const seccion = document.createElement("div");
+            seccion.innerHTML = `<h2 class="categoria-titulo">${cat}</h2>`;
+
+            const grid = document.createElement("div");
+            grid.className = "grid";
+
+            productosCategoria.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "producto";
+
+                const img = document.createElement("img");
+                img.alt = p.Nombre || "Producto";
+
+                const nombre = document.createElement("p");
+                nombre.className = "producto-nombre";
+                nombre.textContent = p.Nombre || "";
+
+                const precio = document.createElement("p");
+                precio.className = "producto-precio";
+                precio.textContent = `$${p.Precio ?? 0}`;
+
+                const acciones = document.createElement("div");
+                acciones.className = "producto-acciones";
+
+                const btnComprar = document.createElement("button");
+                btnComprar.className = "btn-mos btn-comprar";
+                btnComprar.textContent = "Comprar";
+                btnComprar.addEventListener("click", () => abrirModal(p));
+
+                const btnPreguntar = document.createElement("button");
+                btnPreguntar.className = "btn-mos btn-preguntar";
+                btnPreguntar.textContent = "Preguntar";
+                btnPreguntar.addEventListener("click", () => preguntar(p));
+
+                acciones.appendChild(btnComprar);
+                acciones.appendChild(btnPreguntar);
+
+                card.appendChild(img);
+                card.appendChild(nombre);
+                card.appendChild(precio);
+                card.appendChild(acciones);
+
+                const carpetasCandidatas = obtenerCarpetasCandidatas(p, carpetasRepo);
+                cargarImagenConFallback(img, carpetasCandidatas.length ? carpetasCandidatas : [String(p.Carpeta || p["Categoría"] || "").trim()], p["Referencia"]);
+
+                grid.appendChild(card);
+            });
+
+            seccion.appendChild(grid);
+            contPrincipal.appendChild(seccion);
+        });
+
+    } catch (e) {
+        console.error("Error al cargar catálogo:", e);
+        document.getElementById("catalogo").innerHTML = "<h3 style='text-align:center;'>No se pudo cargar el catálogo.</h3>";
+    }
+}
+
+function abrirModal(p) {
+    productoActual = p;
+
+    document.getElementById("mTitulo").innerText = p.Nombre || "Producto";
+    document.getElementById("modalCompra").style.display = "block";
+    document.getElementById("mCant").value = 1;
+    document.getElementById("mAceptaDatos").checked = false;
+    document.getElementById("mConsentError").style.display = "none";
+    actualizarEstadoBotonEnvio();
+
+    const cont = document.getElementById("contenedorTallas");
+
+    if (requiereTalla(p)) {
+        cont.style.display = "block";
+        generarTallas(1);
+    } else {
+        cont.innerHTML = "";
+        cont.style.display = "none";
+    }
+
+    actualizarPrecio(1);
+}
+
+function generarTallas(cant) {
+    const cont = document.getElementById("contenedorTallas");
+    cont.innerHTML = "<p style='font-size:0.85em; margin-bottom:5px;'>Elige tallas:</p>";
+
+    for (let i = 1; i <= cant; i++) {
+        const div = document.createElement("div");
+        div.className = "talla-item";
+        div.innerHTML = `
+            <label style="font-size:0.75em">Unidad ${i}:</label>
+            <select class="sel-talla-final">
+                <option value="S">Talla S</option>
+                <option value="M">Talla M</option>
+                <option value="L">Talla L</option>
+                <option value="XL">Talla XL</option>
+                <option value="Única">Talla Única</option>
+            </select>
+        `;
+        cont.appendChild(div);
+    }
+}
+
+function actualizarPrecio(cantidad) {
+    const precio = Number(productoActual?.Precio || 0);
+    document.getElementById("mTotalText").innerText = "Total: $" + (cantidad * precio);
+}
+
+document.getElementById("mCant").addEventListener("input", (e) => {
+    let c = parseInt(e.target.value, 10);
+    if (isNaN(c) || c < 1) c = 1;
+
+    e.target.value = c;
+
+    const cont = document.getElementById("contenedorTallas");
+
+    if (requiereTalla(productoActual)) {
+        cont.style.display = "block";
+        generarTallas(c);
+    } else {
+        cont.innerHTML = "";
+        cont.style.display = "none";
+    }
+
+    actualizarPrecio(c);
+});
+
+document.getElementById("mAceptaDatos").addEventListener("change", actualizarEstadoBotonEnvio);
+
+function enviarPedido() {
+    const nom = document.getElementById("mNombre").value.trim();
+    const dir = document.getElementById("mDireccion").value.trim();
+    const cant = parseInt(document.getElementById("mCant").value, 10) || 1;
+    const aceptaDatos = document.getElementById("mAceptaDatos").checked;
+
+    if (!productoActual) {
+        alert("No hay producto seleccionado.");
+        return;
+    }
+
+    if (!nom || !dir) {
+        alert("Faltan datos de envío.");
+        return;
+    }
+
+    if (!aceptaDatos) {
+        document.getElementById("mConsentError").style.display = "block";
+        document.getElementById("btnEnviarPedido").disabled = true;
+        alert("Debes aceptar el tratamiento de datos para poder enviar la solicitud.");
+        return;
+    }
+
+    let mensajeTallas = "";
+    if (requiereTalla(productoActual)) {
+        const selects = document.querySelectorAll(".sel-talla-final");
+        const lista = [];
+        selects.forEach((s, i) => lista.push(`Unid ${i + 1}: ${s.value}`));
+        mensajeTallas = `*Tallas:* \n- ${lista.join('\n- ')}\n\n`;
+    }
+
+    const precio = Number(productoActual.Precio || 0);
+    const total = cant * precio;
+
+    const texto =
+        `🧾 *ORDEN DE PEDIDO - MANGUELITO*\n\n` +
+        `*Producto:* ${productoActual.Nombre}\n` +
+        `*Ref:* ${productoActual.Referencia}\n` +
+        `*Cantidad:* ${cant}\n` +
+        mensajeTallas +
+        `*Total:* $${total}\n\n` +
+        `*Cliente:* ${nom}\n` +
+        `*Dirección:* ${dir}\n` +
+        `*Autorización de datos:* Sí`;
+
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`, "_blank");
+}
+
+function preguntar(p) {
+    const msg = `Hola! Me interesa este producto: ${p.Nombre}`;
+    window.open(`https://wa.me/${numeroWA}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+function cerrar() {
+    document.getElementById("modalCompra").style.display = "none";
+}
+
+window.onclick = (e) => {
+    if (e.target === document.getElementById("modalCompra")) cerrar();
+};
+
+cargar();
+</script>
+
+</body>
+</html>
